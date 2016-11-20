@@ -8,6 +8,15 @@ import java.io.Serializable;
  */
 public class Vec3d implements Cloneable, Serializable
 {
+	public final static Vec3d ZERO = new Vec3d()
+	{
+		@Override
+		public boolean isZero()
+		{
+			return true;
+		}
+	};
+
 	public double x;
 	public double y;
 	public double z;
@@ -766,6 +775,80 @@ public class Vec3d implements Cloneable, Serializable
 			z -= (long) z;
 		}
 		return this;
+	}
+
+
+	public double get(int i)
+	{
+		switch (i)
+		{
+			case 0: return x;
+			case 1: return y;
+			case 2: return z;
+		}
+		throw new IllegalArgumentException(""+i);
+	}
+
+
+	public void set(int i, double o)
+	{
+		switch (i)
+		{
+			case 0: x = o; return;
+			case 1: y = o; return;
+			case 2: z = o; return;
+		}
+		throw new IllegalArgumentException(""+i);
+	}
+
+
+	public void scale(int i, double o)
+	{
+		switch (i)
+		{
+			case 0: x *= o; return;
+			case 1: y *= o; return;
+			case 2: z *= o; return;
+		}
+		throw new IllegalArgumentException(""+i);
+	}
+
+
+	public void add(int i, double o)
+	{
+		switch (i)
+		{
+			case 0: x += o; return;
+			case 1: y += o; return;
+			case 2: z += o; return;
+		}
+		throw new IllegalArgumentException(""+i);
+	}
+
+
+	public double lenSqr()
+	{
+		return dot(this);
+	}
+
+	
+	public Vec2d getXY()
+	{
+		return new Vec2d(x, y);
+	}
+	
+	
+	public double max()
+	{
+		if (x > y && x > z)
+		{
+			return x;
+		}
+		if (y > z)
+		{
+			return y;
+		}
+		return z;
 	}
 
 

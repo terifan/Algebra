@@ -1,12 +1,12 @@
 package org.terifan.algebra;
 
 
-public class mat3
+public class Mat3d
 {
 	private Vec3d[] v;
 
 
-	public mat3(Vec3d v0, Vec3d v1, Vec3d v2)
+	public Mat3d(Vec3d v0, Vec3d v1, Vec3d v2)
 	{
 		v = new Vec3d[3];
 		v[0] = v0;
@@ -15,7 +15,7 @@ public class mat3
 	}
 
 
-	public mat3(mat3 m)
+	public Mat3d(Mat3d m)
 	{
 		v = new Vec3d[3];
 		v[0] = m.v[0].clone();
@@ -24,16 +24,16 @@ public class mat3
 	}
 
 
-	public mat3 transposeClone()
+	public Mat3d transposeClone()
 	{
-		return new mat3(
+		return new Mat3d(
 			new Vec3d(v[0].x, v[1].x, v[2].x),
 			new Vec3d(v[0].y, v[1].y, v[2].y),
 			new Vec3d(v[0].z, v[1].z, v[2].z));
 	}
 
 
-	public mat3 transpose()
+	public Mat3d transpose()
 	{
 		double t0 = v[0].y;
 		double t1 = v[0].z;
@@ -58,9 +58,9 @@ public class mat3
 	}
 
 
-	public static mat3 identity2D()
+	public static Mat3d identity2D()
 	{
-		return new mat3(
+		return new Mat3d(
 			new Vec3d(1.0, 0.0, 0.0),
 			new Vec3d(0.0, 1.0, 0.0),
 			new Vec3d(0.0, 0.0, 1.0));
@@ -68,10 +68,10 @@ public class mat3
 
 
 	// Gauss-Jordan elimination with partial pivoting
-	public mat3 inverse()
+	public Mat3d inverse()
 	{
-		mat3 a = new mat3(this);	    // As a evolves from original mat into identity
-		mat3 b = new mat3(identity2D());   // b evolves from identity into inverse(a)
+		Mat3d a = new Mat3d(this);	    // As a evolves from original mat into identity
+		Mat3d b = new Mat3d(identity2D());   // b evolves from identity into inverse(a)
 
 		// Loop over cols of a from left to right, eliminating above and below diag
 		for (int j = 0; j < 3; j++)
@@ -111,7 +111,7 @@ public class mat3
 	}
 
 
-	public mat3 divide(double d)
+	public Mat3d divide(double d)
 	{
 		double d_inv = 1.0 / d;
 		v[0].scale(d_inv);
@@ -121,7 +121,7 @@ public class mat3
 	}
 
 
-	public mat3 subtract(double d)
+	public Mat3d subtract(double d)
 	{
 		v[0].subtract(d);
 		v[1].subtract(d);

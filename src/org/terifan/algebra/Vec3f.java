@@ -4,8 +4,17 @@ package org.terifan.algebra;
 /**
  * Vector class represents a point in space defined by x, y and z coordinates.
  */
-public final class Vec3f
+public class Vec3f
 {
+	public final static Vec3f ZERO = new Vec3f()
+	{
+		@Override
+		public boolean isZero()
+		{
+			return true;
+		}
+	};
+
 	public float x;
 	public float y;
 	public float z;
@@ -16,6 +25,15 @@ public final class Vec3f
 	 */
 	public Vec3f()
 	{
+	}
+
+
+	/**
+	 * Constructs a new Vector3f.
+	 */
+	public Vec3f(float o)
+	{
+		set(o, o, o);
 	}
 
 
@@ -645,6 +663,80 @@ public final class Vec3f
 	}
 
 
+	float get(int i)
+	{
+		switch (i)
+		{
+			case 0: return x;
+			case 1: return y;
+			case 2: return z;
+		}
+		throw new IllegalArgumentException(""+i);
+	}
+
+
+	void set(int i, float o)
+	{
+		switch (i)
+		{
+			case 0: x = o; return;
+			case 1: y = o; return;
+			case 2: z = o; return;
+		}
+		throw new IllegalArgumentException(""+i);
+	}
+
+
+	void scale(int i, float o)
+	{
+		switch (i)
+		{
+			case 0: x *= o; return;
+			case 1: y *= o; return;
+			case 2: z *= o; return;
+		}
+		throw new IllegalArgumentException(""+i);
+	}
+
+	
+	public Vec2f getXY()
+	{
+		return new Vec2f(x, y);
+	}
+	
+	
+	public float max()
+	{
+		if (x > y && x > z)
+		{
+			return x;
+		}
+		if (y > z)
+		{
+			return y;
+		}
+		return z;
+	}
+
+
+	public void add(int i, float o)
+	{
+		switch (i)
+		{
+			case 0: x += o; return;
+			case 1: y += o; return;
+			case 2: z += o; return;
+		}
+		throw new IllegalArgumentException(""+i);
+	}
+
+
+	public float lenSqr()
+	{
+		return dot(this);
+	}
+
+	
 	/**
 	 * Constructs a clone of this Vector3f.
 	 */

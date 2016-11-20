@@ -1,32 +1,32 @@
 package org.terifan.algebra;
 
 
-public class Vec2f 
+public class Vec2d 
 {
-	public float x;
-	public float y;
+	public double x;
+	public double y;
 
 
-	public Vec2f()
+	public Vec2d()
 	{
 	}
 
 
-	public Vec2f(float aX, float aY)
+	public Vec2d(double aX, double aY)
 	{
 		x = aX;
 		y = aY;
 	}
 
 
-	public Vec2f(float aXY)
+	public Vec2d(double aXY)
 	{
 		x = aXY;
 		y = aXY;
 	}
 
 
-	public Vec2f add(Vec2f aXY)
+	public Vec2d add(Vec2d aXY)
 	{
 		x += aXY.x;
 		y += aXY.y;

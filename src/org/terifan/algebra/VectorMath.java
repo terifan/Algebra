@@ -71,7 +71,7 @@ public class VectorMath
 		Vec3d t = new Vec3d(x, y, z);
 		Vec3d u = t.cross(aLightNormal).normalize();
 		Vec3d v = aLightNormal.clone().cross(u);
-		mat3 rot = new mat3(u, v, aLightNormal.clone());
+		Mat3d rot = new Mat3d(u, v, aLightNormal.clone());
 
 		return rot.transpose().scale(sample);
 	}
