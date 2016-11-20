@@ -14,8 +14,8 @@ public class Plane implements Cloneable
 	public final static int BACK_OF_PLANE = 2;
 	public final static int INTERSECT_PLANE = 4;
 
-	private Vec3d mNormal;
 	private double mDistance;
+	private Vec3d mNormal;
 	private Vec3d mOrigin;
 	private Vec3d mDirection;
 
@@ -26,7 +26,6 @@ public class Plane implements Cloneable
 	public Plane()
 	{
 		mNormal = new Vec3d();
-		mDistance = 0;
 	}
 
 
@@ -89,9 +88,6 @@ public class Plane implements Cloneable
 	}
 
 
-	/**
-	 *
-	 */
 	public int getProjectionPlane()
 	{
 		Vec3d normal = getNormal();
@@ -111,62 +107,27 @@ public class Plane implements Cloneable
 	}
 
 
-	/**
-	 * Sets the normal of this plane.
-	 */
 	public void setNormal(Vec3d aVector)
 	{
 		mNormal.set(aVector);
 	}
 
 
-	/**
-	 * Gets the normal of this plane.
-	 */
 	public Vec3d getNormal()
 	{
 		return mNormal;
 	}
 
 
-	/**
-	 * Sets the distance of this plane.
-	 */
 	public void setDistance(double aDistance)
 	{
 		mDistance = aDistance;
 	}
 
 
-	/**
-	 * Gets the distance of this plane.
-	 */
 	public double getDistance()
 	{
 		return mDistance;
-	}
-
-
-	/**
-	 * Find the distance between a ray and a plane.
-	 *
-	 * @param aRayOrigin
-	 *    A position in world space.
-	 * @param aRayVector
-	 *    A normalized direction vector.
-	 * @return
-	 *    The distance or Double.NaN if the ray and plane are parallel.
-	 */
-	public double distanceVectorPlane2(Vec3d aOrigin)
-	{
-		double denom = mNormal.dot(mNormal.clone().scale(-1)); // ?????????? ger alltid -1 plus/minus 0.000001
-
-		if (denom == 0)
-		{
-			return Double.NaN;
-		}
-
-		return -((mNormal.dot(aOrigin) - mDistance) / denom);	 // "-" var "+" förrut
 	}
 
 
@@ -319,6 +280,12 @@ public class Plane implements Cloneable
 		if (Math.abs(plane.mNormal.z - mNormal.z) > aThresholdPlane) return false;
 
 		return true;
+	}
+
+
+	public boolean pointInsidePlane(Vec3d aPoint)
+	{
+		return mNormal.dot(aPoint) > mDistance;
 	}
 
 

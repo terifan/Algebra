@@ -8,7 +8,9 @@ import java.io.Serializable;
  */
 public class Vec3d implements Cloneable, Serializable
 {
-	public double x, y, z;
+	public double x;
+	public double y;
+	public double z;
 
 
 	/**
@@ -117,16 +119,6 @@ public class Vec3d implements Cloneable, Serializable
 
 
 	/**
-	 * Sets each of the x, y, z coordinates to their absolute values.
-	 */
-	@Deprecated
-	public Vec3d absClone()
-	{
-		return new Vec3d(Math.abs(x), Math.abs(y), Math.abs(z));
-	}
-
-
-	/**
 	 * Returns true if  (x == 0 && y == 0 && z == 0).
 	 */
 	public boolean isZero()
@@ -154,13 +146,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	@Deprecated
-	public Vec3d addClone(Vec3d aVector)
-	{
-		return new Vec3d(x + aVector.x, y + aVector.y, z + aVector.z);
-	}
-
-
 	public Vec3d add(double x, double y, double z)
 	{
 		this.x += x;
@@ -168,13 +153,6 @@ public class Vec3d implements Cloneable, Serializable
 		this.z += z;
 
 		return this;
-	}
-
-
-	@Deprecated
-	public Vec3d addClone(double x, double y, double z)
-	{
-		return new Vec3d(this.x + x, this.y + y, this.z + z);
 	}
 
 
@@ -188,13 +166,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	@Deprecated
-	public Vec3d addClone(double aValue)
-	{
-		return new Vec3d(x + aValue, y + aValue, z + aValue);
-	}
-
-
 	public Vec3d subtract(Vec3d aVector)
 	{
 		x -= aVector.x;
@@ -202,13 +173,6 @@ public class Vec3d implements Cloneable, Serializable
 		z -= aVector.z;
 
 		return this;
-	}
-
-
-	@Deprecated
-	public Vec3d subtractClone(Vec3d aVector)
-	{
-		return new Vec3d(x - aVector.x, y - aVector.y, z - aVector.z);
 	}
 
 
@@ -222,13 +186,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	@Deprecated
-	public Vec3d subtractClone(double x, double y, double z)
-	{
-		return new Vec3d(this.x - x, this.y - y, this.z - z);
-	}
-
-
 	public Vec3d subtract(double aValue)
 	{
 		this.x -= aValue;
@@ -236,13 +193,6 @@ public class Vec3d implements Cloneable, Serializable
 		this.z -= aValue;
 
 		return this;
-	}
-
-
-	@Deprecated
-	public Vec3d subtractClone(double aValue)
-	{
-		return new Vec3d(x - aValue, y - aValue, z - aValue);
 	}
 
 
@@ -256,13 +206,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	@Deprecated
-	public Vec3d scaleClone(double aScale)
-	{
-		return new Vec3d(x * aScale, y * aScale, z * aScale);
-	}
-
-
 	public Vec3d scale(double aScaleX, double aScaleY, double aScaleZ)
 	{
 		x *= aScaleX;
@@ -273,13 +216,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	@Deprecated
-	public Vec3d scaleClone(double aScaleX, double aScaleY, double aScaleZ)
-	{
-		return new Vec3d(x * aScaleX, y * aScaleY, z * aScaleZ);
-	}
-
-
 	public Vec3d scale(Vec3d aVector)
 	{
 		x *= aVector.x;
@@ -287,13 +223,6 @@ public class Vec3d implements Cloneable, Serializable
 		z *= aVector.z;
 
 		return this;
-	}
-
-
-	@Deprecated
-	public Vec3d scaleClone(Vec3d aVector)
-	{
-		return new Vec3d(x * aVector.x, y * aVector.y, z * aVector.z);
 	}
 
 
@@ -309,15 +238,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	@Deprecated
-	public Vec3d divideClone(double aFactor)
-	{
-		double scale = 1.0 / aFactor;
-
-		return new Vec3d(x * scale, y * scale, z * scale);
-	}
-
-
 	public Vec3d divide(double x, double y, double z)
 	{
 		this.x /= x;
@@ -328,13 +248,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	@Deprecated
-	public Vec3d divideClone(double x, double y, double z)
-	{
-		return new Vec3d(this.x / x, this.y / y, this.z / z);
-	}
-
-
 	public Vec3d divide(Vec3d aFactor)
 	{
 		x /= aFactor.x;
@@ -342,13 +255,6 @@ public class Vec3d implements Cloneable, Serializable
 		z /= aFactor.z;
 
 		return this;
-	}
-
-
-	@Deprecated
-	public Vec3d divideClone(Vec3d aFactor)
-	{
-		return new Vec3d(x / aFactor.x, y * aFactor.y, z * aFactor.z);
 	}
 
 
@@ -378,13 +284,6 @@ public class Vec3d implements Cloneable, Serializable
 		if (x == -0 || Double.isNaN(x) || Double.isInfinite(x) || Double.isFinite(x)) x = 0;
 		if (y == -0 || Double.isNaN(y) || Double.isInfinite(y) || Double.isFinite(y)) y = 0;
 		if (z == -0 || Double.isNaN(z) || Double.isInfinite(z) || Double.isFinite(z)) z = 0;
-	}
-
-
-	@Deprecated
-	public Vec3d normalizeClone()
-	{
-		return clone().normalize();
 	}
 
 
@@ -420,13 +319,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	@Deprecated
-	public Vec3d crossClone(double x, double y, double z)
-	{
-		return clone().cross(x, y, z);
-	}
-
-
 	public Vec3d cross(Vec3d aVector)
 	{
 		double tempX = y * aVector.z - z * aVector.y;
@@ -438,13 +330,6 @@ public class Vec3d implements Cloneable, Serializable
         z = tempZ;
 
 		return this;
-	}
-
-
-	@Deprecated
-	public Vec3d crossClone(Vec3d aVector)
-	{
-		return clone().cross(aVector);
 	}
 
 
@@ -643,13 +528,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	@Deprecated
-	public Vec3d clampClone()
-	{
-		return clone().clamp();
-	}
-
-
 	public Vec3d setLength(double aLength)
 	{
 		double length = aLength / length();
@@ -820,18 +698,6 @@ public class Vec3d implements Cloneable, Serializable
 
 
 	/**
-	 * Removes the integer part of each component and increments with one if
-	 * the fractional part is negative ensuring that the each component will
-	 * be in range 0 to 1 inclusive.
-	 */
-	@Deprecated
-	public Vec3d wrapClone()
-	{
-		return new Vec3d(x, y, z).wrap();
-	}
-
-
-	/**
 	 * Return XYZ as 8 bit RGB values packed into an int. Components are clamped into range 0-255 with X component shifted 16 bits, Y component shifted 8 bits.
 	 */
 	public int toRGB()
@@ -881,6 +747,24 @@ public class Vec3d implements Cloneable, Serializable
 		if (aVector.x > x) x = aVector.x;
 		if (aVector.y > y) y = aVector.y;
 		if (aVector.z > z) z = aVector.z;
+		return this;
+	}
+
+	
+	public Vec3d limit()
+	{
+		if (x > 1 || x < -1)
+		{
+			x -= (long) x;
+		}
+		if (y > 1 || y < -1)
+		{
+			y -= (long) y;
+		}
+		if (z > 1 || z < -1)
+		{
+			z -= (long) z;
+		}
 		return this;
 	}
 

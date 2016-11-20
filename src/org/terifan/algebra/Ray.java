@@ -55,14 +55,12 @@ public class Ray implements Cloneable
 	@Override
 	public Ray clone()
 	{
-		return new Ray(mOrigin, mDirection, mMin, mMax);
+		return new Ray(mOrigin.clone(), mDirection.clone(), mMin, mMax);
 	}
 
 
 	public double getDistanceToPoint(Vec3d aPoint)
 	{
-//		return mDirection.crossClone(aPoint.subtractClone(mOrigin)).length();
-
 		double tx = aPoint.x - mOrigin.x;
 		double ty = aPoint.y - mOrigin.y;
 		double tz = aPoint.z - mOrigin.z;
@@ -344,39 +342,39 @@ public class Ray implements Cloneable
 	}
 
 
-	// http://answers.unity3d.com/questions/192261/finding-shortest-line-segment-between-two-rays-clo.html
-	public static double closestTimeOfApproach(Vec3d pos1, Vec3d vel1, Vec3d pos2, Vec3d vel2)
-	{
-		Vec3d dv = vel1.clone().subtract(vel2);
-		double dv2 = dv.dot(dv);
-		if (dv2 < 0.0000001)      // the tracks are almost parallel
-		{
-			return 0.0; // any time is ok.  Use time 0.
-		}
-
-		Vec3d w0 = pos1.subtractClone(pos2);
-
-		return -w0.dot(dv) / dv2;
-	}
-
-
-//	public static double closestDistOfApproach(Vector pos1, Vector vel1, Vector pos2, Vector vel2, Vector p1, Vector p2)
+//	// http://answers.unity3d.com/questions/192261/finding-shortest-line-segment-between-two-rays-clo.html
+//	public static double closestTimeOfApproach(Vec3d pos1, Vec3d vel1, Vec3d pos2, Vec3d vel2)
+//	{
+//		Vec3d dv = vel1.clone().subtract(vel2);
+//		double dv2 = dv.dot(dv);
+//		if (dv2 < 0.0000001)      // the tracks are almost parallel
+//		{
+//			return 0.0; // any time is ok.  Use time 0.
+//		}
+//
+//		Vec3d w0 = pos1.clone().subtract(pos2);
+//
+//		return -w0.dot(dv) / dv2;
+//	}
+//
+//
+//	public static double closestDistOfApproach(Vec3d pos1, Vec3d vel1, Vec3d pos2, Vec3d vel2, Vec3d p1, Vec3d p2)
 //	{
 //		double t = closestTimeOfApproach(pos1, vel1, pos2, vel2);
 //
-//		p1.set(pos1).add(vel1.scaleClone(t));
-//		p2.set(pos2).add(vel2.scaleClone(t));
+//		p1.set(pos1).add(vel1.clone().scale(t));
+//		p2.set(pos2).add(vel2.clone().scale(t));
 //
 //		return p1.distance(p2); // distance at CPA
 //	}
-
-
-	public static Vec3d closestPointOfApproach(Vec3d pos1, Vec3d vel1, Vec3d pos2, Vec3d vel2)
-	{
-		double t = closestTimeOfApproach(pos1, vel1, pos2, vel2);
-
-		return pos1.clone().add(vel1.clone().scale(t));
-	}
+//
+//
+//	public static Vec3d closestPointOfApproach(Vec3d pos1, Vec3d vel1, Vec3d pos2, Vec3d vel2)
+//	{
+//		double t = closestTimeOfApproach(pos1, vel1, pos2, vel2);
+//
+//		return pos1.clone().add(vel1.clone().scale(t));
+//	}
 
 
 	public void reflect(Vec3d normal)
@@ -410,5 +408,119 @@ public class Ray implements Cloneable
 	public boolean isWithinBounds(double tVal)
 	{
 		return tVal <= mMax && tVal >= mMin;
+	}
+
+
+	public double intersectTriangle(Vec3d a, Vec3d b, Vec3d c)
+	{
+		// find vectors for two edges sharing vert0
+		Vec3d edge1 = b.clone().subtract(a);
+		Vec3d edge2 = c.clone().subtract(a);
+
+		// begin calculating determinant - also used to calculate U parameter
+		Vec3d pvec = mDirection.clone().cross(edge2);
+
+		// if determinant is near zero, ray lies in plane of triangle
+		double det = edge1.dot(pvec);
+
+		if (det < 0.000001)
+		{
+			return -1;
+		}
+
+		// calculate distance from vert0 to ray origin
+		Vec3d tvec = mOrigin.clone().subtract(a);
+
+		// calculate U parameter and test bounds
+		double u = tvec.dot(pvec);
+		if (u < 0.0 || u > det)
+		{
+			return -1;
+		}
+
+		// prepare to test V parameter
+		Vec3d qvec = tvec.clone().cross(edge1);
+
+		// calculate V parameter and test bounds
+		double v = mDirection.dot(qvec);
+		if (v < 0.0 || u + v > det)
+		{
+			return -1;
+		}
+
+		// calculate t, scale parameters, ray intersects triangle
+		double inv_det = 1.0 / det;
+		double t = edge2.dot(qvec);
+
+		t *= inv_det;
+
+		return t;
+	}
+
+
+	public double intersectSphere(Vec3d aCenter, Vec3d aRadius)
+	{
+		Vec3d center = aCenter.clone();
+		Vec3d radius = aRadius.clone();
+
+		double discriminant = getDiscriminant(center, radius, mOrigin, mDirection);
+
+		if (discriminant < 0)
+		{
+			return -1;
+		}
+
+		// Quadratic formula!
+		double leftTerm = -mDirection.dot(mOrigin.clone().subtract(center));
+		double rightTerm = Math.sqrt(discriminant);
+		double denominator = mDirection.dot(mDirection);
+		double tNeg = (leftTerm - rightTerm) / denominator;
+		double tPos = (leftTerm + rightTerm) / denominator;
+
+		// If either of the roots is within the ray's intersection bounds, use smaller one. Otherwise, the ray didn't hit.
+		if (isWithinBounds(tNeg))
+		{
+			return tNeg;
+		}
+		else if (isWithinBounds(tPos))
+		{
+			return tPos;
+		}
+
+		return -1;
+	}
+
+
+	// Gets the discriminat givin the origin and direction of the ray
+	private static double getDiscriminant(Vec3d aCenter, Vec3d aRadius, Vec3d aOrigin, Vec3d aDirection)
+	{
+		assert aRadius.x == aRadius.y && aRadius.x == aRadius.z;
+
+		Vec3d cent = aOrigin.clone().subtract(aCenter);
+		double scalarA = aDirection.dot(cent) * aDirection.dot(cent);
+		double scalarB = cent.dot(cent) - aRadius.x * aRadius.x;
+		return scalarA - aDirection.dot(aDirection) * scalarB;
+	}
+
+
+	public Vec3d getSphereNormal(Vec3d aCenter, Vec3d aRadius, Vec3d aPoint)
+	{
+		assert aRadius.x == aRadius.y && aRadius.x == aRadius.z;
+
+		// Find Normal
+		Vec3d surfaceNormal = aPoint.clone().subtract(aCenter);
+		surfaceNormal.normalize();
+
+		//Get the norm of the vector between the ray and the center of sphere.
+		Vec3d originToSphere = mOrigin.clone().subtract(aCenter);
+
+		// If the length of the vector is less than the radius, ray originated
+		// from inside the sphere. Thus we need to negate the normal.
+		if (originToSphere.length() < aRadius.x)
+		{
+			surfaceNormal.scale(-1);
+		}
+
+		return surfaceNormal;
 	}
 }

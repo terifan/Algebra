@@ -19,14 +19,14 @@ public class Vec2f
 	}
 
 
-	Vec2f(double aXY)
+	public Vec2f(double aXY)
 	{
 		x = aXY;
 		y = aXY;
 	}
 
 
-	Vec2f add(Vec2f aXY)
+	public Vec2f add(Vec2f aXY)
 	{
 		x += aXY.x;
 		y += aXY.y;
