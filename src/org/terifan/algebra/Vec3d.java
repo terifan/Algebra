@@ -458,10 +458,7 @@ public class Vec3d implements Cloneable, Serializable
 		{
 			return y;
 		}
-		else
-		{
-			return z;
-		}
+		return z;
 	}
 
 
@@ -478,10 +475,7 @@ public class Vec3d implements Cloneable, Serializable
 		{
 			return y;
 		}
-		else
-		{
-			return z;
-		}
+		return z;
 	}
 
 
@@ -759,7 +753,7 @@ public class Vec3d implements Cloneable, Serializable
 		return this;
 	}
 
-	
+
 	public Vec3d limit()
 	{
 		if (x > 1 || x < -1)
@@ -831,24 +825,10 @@ public class Vec3d implements Cloneable, Serializable
 		return dot(this);
 	}
 
-	
+
 	public Vec2d getXY()
 	{
 		return new Vec2d(x, y);
-	}
-	
-	
-	public double max()
-	{
-		if (x > y && x > z)
-		{
-			return x;
-		}
-		if (y > z)
-		{
-			return y;
-		}
-		return z;
 	}
 
 
@@ -868,8 +848,8 @@ public class Vec3d implements Cloneable, Serializable
 //		aBundle.putDouble("y", y);
 //		aBundle.putDouble("z", z);
 //	}
-	
-	
+
+
 	public static Vec3d decode(String aString)
 	{
 		Vec3d v = new Vec3d();

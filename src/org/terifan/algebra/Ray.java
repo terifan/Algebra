@@ -39,9 +39,21 @@ public class Ray implements Cloneable
 	}
 
 
+	public void setOrigin(Vec3d aOrigin)
+	{
+		this.mOrigin = aOrigin;
+	}
+
+
 	public Vec3d getDirection()
 	{
 		return mDirection;
+	}
+
+
+	public void setDirection(Vec3d aDirection)
+	{
+		this.mDirection = aDirection;
 	}
 
 
@@ -399,12 +411,24 @@ public class Ray implements Cloneable
 	}
 
 
+	public void setMin(double aMin)
+	{
+		this.mMin = aMin;
+	}
+
+
 	public double getMax()
 	{
 		return mMax;
 	}
 
-	
+
+	public void setMax(double aMax)
+	{
+		this.mMax = aMax;
+	}
+
+
 	public boolean isWithinBounds(double tVal)
 	{
 		return tVal <= mMax && tVal >= mMin;
