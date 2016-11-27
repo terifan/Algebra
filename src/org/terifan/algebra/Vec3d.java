@@ -705,9 +705,9 @@ public class Vec3d implements Cloneable, Serializable
 	 */
 	public int toRGB()
 	{
-		int r = Math.max(Math.min((int)x, 255), 0) << 16;
-		int g = Math.max(Math.min((int)y, 255), 0) << 8;
-		int b = Math.max(Math.min((int)z, 255), 0);
+		int r = Math.max(Math.min((int)(x + 0.5), 255), 0) << 16;
+		int g = Math.max(Math.min((int)(y + 0.5), 255), 0) << 8;
+		int b = Math.max(Math.min((int)(z + 0.5), 255), 0);
 
 		return r + g + b;
 	}
