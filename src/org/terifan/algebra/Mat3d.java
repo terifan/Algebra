@@ -1,5 +1,6 @@
 package org.terifan.algebra;
 
+import sun.rmi.runtime.Log;
 
 public class Mat3d
 {
@@ -70,6 +71,19 @@ public class Mat3d
 	// Gauss-Jordan elimination with partial pivoting
 	public Mat3d inverse()
 	{
+//		double[][] in = 
+//		{
+//			v[0].toArray(),
+//			v[1].toArray(),
+//			v[2].toArray()
+//		};
+//		double[][] out = inverz_matrike(in);
+//		v[0] = new Vec3d(out[0]);
+//		v[1] = new Vec3d(out[1]);
+//		v[2] = new Vec3d(out[2]);
+//
+//		return this;
+
 		Mat3d a = new Mat3d(this);	    // As a evolves from original mat into identity
 		Mat3d b = new Mat3d(identity2D());   // b evolves from identity into inverse(a)
 
@@ -110,7 +124,66 @@ public class Mat3d
 		return b;
 	}
 
-
+//	private double[][] inverz_matrike(double[][]in){
+//		int st_vrs=in.length, st_stolp=in[0].length;
+//		double[][]out=new double[st_vrs][st_stolp];
+//		double[][]old=new double[st_vrs][st_stolp*2];
+//		double[][]newX=new double[st_vrs][st_stolp*2];
+//
+//		
+//		for (int v=0;v<st_vrs;v++){//ones vector
+//			for (int s=0;s<st_stolp*2;s++){
+//				if (s-v==st_vrs) 
+//					old[v][s]=1;
+//				if(s<st_stolp)
+//					old[v][s]=in[v][s];
+//			}
+//		}
+//		//zeros below the diagonal
+//		for (int v=0;v<st_vrs;v++){
+//			for (int v1=0;v1<st_vrs;v1++){
+//				for (int s=0;s<st_stolp*2;s++){
+//					if (v==v1)
+//						newX[v][s]=old[v][s]/old[v][v];
+//					else
+//						newX[v1][s]=old[v1][s];
+//				}
+//			}
+//			old=prepisi(newX);		
+//			for (int v1=v+1;v1<st_vrs;v1++){
+//				for (int s=0;s<st_stolp*2;s++){
+//					newX[v1][s]=old[v1][s]-old[v][s]*old[v1][v];
+//				}
+//			}
+//			old=prepisi(newX);
+//		}
+//		//zeros above the diagonal
+//		for (int s=st_stolp-1;s>0;s--){
+//			for (int v=s-1;v>=0;v--){
+//				for (int s1=0;s1<st_stolp*2;s1++){
+//					newX[v][s1]=old[v][s1]-old[s][s1]*old[v][s];
+//				}
+//			}
+//			old=prepisi(newX);
+//		}
+//		for (int v=0;v<st_vrs;v++){//rigt part of matrix is invers
+//			for (int s=st_stolp;s<st_stolp*2;s++){
+//				out[v][s-st_stolp]=newX[v][s];
+//			}
+//		}
+//		return out;
+//	}
+//
+//	private double[][] prepisi(double[][]in){
+//		double[][]out=new double[in.length][in[0].length];
+//		for(int v=0;v<in.length;v++){
+//			for (int s=0;s<in[0].length;s++){
+//				out[v][s]=in[v][s];
+//			}
+//		}
+//		return out;
+//	}
+	
 	public Mat3d divide(double d)
 	{
 		double d_inv = 1.0 / d;
@@ -148,4 +221,20 @@ public class Mat3d
 //			 - v[1].x * (v[0].y * v[2].z - v[2].y * v[0].z)
 //			 + v[2].x * (v[0].y * v[1].z - v[0].z * v[1].y);
 //	}
+
+
+	@Override
+	public String toString()
+	{
+		String s = "";
+		for (int c = 0; c < 3; c++)
+		{
+			if (c > 0)
+			{
+				s += ",";
+			}
+			s += v[c];
+		}
+		return "{" + s + "}";
+	}
 }
