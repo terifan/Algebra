@@ -157,6 +157,16 @@ public class Vec3f
 	}
 
 
+	public Vec3f add(Vec3d aVector)
+	{
+		x += aVector.x;
+		y += aVector.y;
+		z += aVector.z;
+
+		return this;
+	}
+
+
 	public Vec3f addClone(Vec3f aVector)
 	{
 		return new Vec3f(x + aVector.x, y + aVector.y, z + aVector.z);
@@ -256,6 +266,19 @@ public class Vec3f
 	}
 
 
+	public Vec3f scale(double aScale)
+	{
+		if (aScale != 1)
+		{
+			x *= aScale;
+			y *= aScale;
+			z *= aScale;
+		}
+
+		return this;
+	}
+
+
 	public Vec3f scaleClone(float aScale)
 	{
 		return new Vec3f(x * aScale, y * aScale, z * aScale);
@@ -288,6 +311,25 @@ public class Vec3f
 
 
 	public Vec3f scale(Vec3f aVector)
+	{
+		if (aVector.x != 1)
+		{
+			x *= aVector.x;
+		}
+		if (aVector.y != 1)
+		{
+			y *= aVector.y;
+		}
+		if (aVector.z != 1)
+		{
+			z *= aVector.z;
+		}
+
+		return this;
+	}
+
+
+	public Vec3f scale(Vec3d aVector)
 	{
 		if (aVector.x != 1)
 		{
@@ -754,5 +796,16 @@ public class Vec3f
 	public String toString()
 	{
 		return ("[x=" + x + ", y=" + y + ", z=" + z + "]").replace(".0,", ",").replace(".0]", "]");
+	}
+
+
+	/**
+	 * Returns the length of this Vector.<p>
+	 *
+	 *   return x * x + y * y + z * z;
+	 */
+	public double length2()
+	{
+		return x * x + y * y + z * z;
 	}
 }
