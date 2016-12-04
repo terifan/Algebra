@@ -23,6 +23,54 @@ public class Vec4i
 	}
 
 
+	public Vec4i add(int x, int y, int z, int w)
+	{
+		this.x += x;
+		this.y += y;
+		this.z += z;
+		this.w += w;
+		return this;
+	}
+
+
+	public Vec4i add(Vec4i aVec)
+	{
+		x += aVec.x;
+		y += aVec.y;
+		z += aVec.z;
+		w += aVec.w;
+		return this;
+	}
+
+
+	public Vec4i scale(int s)
+	{
+		this.x *= s;
+		this.y *= s;
+		this.z *= s;
+		this.w *= s;
+		return this;
+	}
+
+
+	public Vec4i scale(int x, int y, int z, int w)
+	{
+		this.x *= x;
+		this.y *= y;
+		this.z *= z;
+		this.w *= w;
+		return this;
+	}
+
+
+	public Vec4i scale(Vec2i aVec)
+	{
+		x *= aVec.x;
+		y *= aVec.y;
+		return this;
+	}
+
+
 	@Override
 	public String toString()
 	{
