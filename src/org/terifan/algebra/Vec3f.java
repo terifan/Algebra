@@ -266,6 +266,19 @@ public class Vec3f
 	}
 
 
+	public Vec3f scale(double aScale)
+	{
+		if (aScale != 1)
+		{
+			x *= aScale;
+			y *= aScale;
+			z *= aScale;
+		}
+
+		return this;
+	}
+
+
 	public Vec3f scaleClone(float aScale)
 	{
 		return new Vec3f(x * aScale, y * aScale, z * aScale);
@@ -783,5 +796,16 @@ public class Vec3f
 	public String toString()
 	{
 		return ("[x=" + x + ", y=" + y + ", z=" + z + "]").replace(".0,", ",").replace(".0]", "]");
+	}
+
+
+	/**
+	 * Returns the length of this Vector.<p>
+	 *
+	 *   return x * x + y * y + z * z;
+	 */
+	public double length2()
+	{
+		return x * x + y * y + z * z;
 	}
 }

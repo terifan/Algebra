@@ -870,4 +870,10 @@ public class Vec3d implements Cloneable, Serializable
 	{
 		return 0.212671 * x + 0.715160 * y + 0.072169 * z;
 	}
+	
+	
+	public double[] toArray()
+	{
+		return new double[]{x,y,z};
+	}
 }

@@ -39,25 +39,6 @@ public class VectorMath
 	}
 
 
-	public static Vec3d uniformSampleUpperHemisphere(Random aRandom, Vec3d aLightNormal)
-	{
-		return uniformSampleUpperHemisphere(aRandom.nextDouble(), aRandom.nextDouble(), aRandom.nextDouble(), aLightNormal);
-		
-//		Vector sample = new Vector(
-//			1 - 2 * aRandom.nextDouble(),
-//			1 - 2 * aRandom.nextDouble(),
-//			1 - 2 * aRandom.nextDouble()
-//		);
-//
-//		if (sample.dot(aLightNormal) < 0)
-//		{
-//			sample.scale(-1);
-//		}
-//
-//		return sample.normalize();
-	}
-
-
 	public static Vec3d importanceSampleUpperHemisphere(double x, double y, double z, double gamma, double phi, Vec3d aLightNormal, double n)
 	{
 		phi *= 2 * Math.PI;

@@ -1,7 +1,7 @@
 package org.terifan.algebra;
 
 
-public class Vec2i 
+public class Vec2i implements Cloneable
 {
 	public int x;
 	public int y;
@@ -16,6 +16,45 @@ public class Vec2i
 	{
 		x = aX;
 		y = aY;
+	}
+
+
+	public Vec2i add(int x, int y)
+	{
+		this.x += x;
+		this.y += y;
+		return this;
+	}
+
+
+	public Vec2i add(Vec2i aVec)
+	{
+		x += aVec.x;
+		y += aVec.y;
+		return this;
+	}
+
+
+	public Vec2i scale(int x, int y)
+	{
+		this.x *= x;
+		this.y *= y;
+		return this;
+	}
+
+
+	public Vec2i scale(Vec2i aVec)
+	{
+		x *= aVec.x;
+		y *= aVec.y;
+		return this;
+	}
+
+
+	@Override
+	public Vec2i clone()
+	{
+		return new Vec2i(x, y);
 	}
 
 
