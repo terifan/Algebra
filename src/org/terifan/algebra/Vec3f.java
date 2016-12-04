@@ -157,6 +157,16 @@ public class Vec3f
 	}
 
 
+	public Vec3f add(Vec3d aVector)
+	{
+		x += aVector.x;
+		y += aVector.y;
+		z += aVector.z;
+
+		return this;
+	}
+
+
 	public Vec3f addClone(Vec3f aVector)
 	{
 		return new Vec3f(x + aVector.x, y + aVector.y, z + aVector.z);
@@ -288,6 +298,25 @@ public class Vec3f
 
 
 	public Vec3f scale(Vec3f aVector)
+	{
+		if (aVector.x != 1)
+		{
+			x *= aVector.x;
+		}
+		if (aVector.y != 1)
+		{
+			y *= aVector.y;
+		}
+		if (aVector.z != 1)
+		{
+			z *= aVector.z;
+		}
+
+		return this;
+	}
+
+
+	public Vec3f scale(Vec3d aVector)
 	{
 		if (aVector.x != 1)
 		{
@@ -698,13 +727,13 @@ public class Vec3f
 		throw new IllegalArgumentException(""+i);
 	}
 
-	
+
 	public Vec2f getXY()
 	{
 		return new Vec2f(x, y);
 	}
-	
-	
+
+
 	public float max()
 	{
 		if (x > y && x > z)
@@ -736,7 +765,7 @@ public class Vec3f
 		return dot(this);
 	}
 
-	
+
 	/**
 	 * Constructs a clone of this Vector3f.
 	 */
