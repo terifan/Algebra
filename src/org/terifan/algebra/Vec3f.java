@@ -740,13 +740,13 @@ public class Vec3f
 		throw new IllegalArgumentException(""+i);
 	}
 
-	
+
 	public Vec2f getXY()
 	{
 		return new Vec2f(x, y);
 	}
-	
-	
+
+
 	public float max()
 	{
 		if (x > y && x > z)
@@ -778,7 +778,7 @@ public class Vec3f
 		return dot(this);
 	}
 
-	
+
 	/**
 	 * Constructs a clone of this Vector3f.
 	 */
