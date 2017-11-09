@@ -1,8 +1,12 @@
 package org.terifan.algebra;
 
+import java.io.Serializable;
 
-public class Vec4i 
+
+public class Vec4i implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	public int x;
 	public int y;
 	public int z;

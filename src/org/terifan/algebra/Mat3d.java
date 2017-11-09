@@ -1,9 +1,12 @@
 package org.terifan.algebra;
 
-import sun.rmi.runtime.Log;
+import java.io.Serializable;
 
-public class Mat3d
+
+public class Mat3d implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	private Vec3d[] v;
 
 
@@ -71,7 +74,7 @@ public class Mat3d
 	// Gauss-Jordan elimination with partial pivoting
 	public Mat3d inverse()
 	{
-//		double[][] in = 
+//		double[][] in =
 //		{
 //			v[0].toArray(),
 //			v[1].toArray(),
@@ -130,10 +133,10 @@ public class Mat3d
 //		double[][]old=new double[st_vrs][st_stolp*2];
 //		double[][]newX=new double[st_vrs][st_stolp*2];
 //
-//		
+//
 //		for (int v=0;v<st_vrs;v++){//ones vector
 //			for (int s=0;s<st_stolp*2;s++){
-//				if (s-v==st_vrs) 
+//				if (s-v==st_vrs)
 //					old[v][s]=1;
 //				if(s<st_stolp)
 //					old[v][s]=in[v][s];
@@ -149,7 +152,7 @@ public class Mat3d
 //						newX[v1][s]=old[v1][s];
 //				}
 //			}
-//			old=prepisi(newX);		
+//			old=prepisi(newX);
 //			for (int v1=v+1;v1<st_vrs;v1++){
 //				for (int s=0;s<st_stolp*2;s++){
 //					newX[v1][s]=old[v1][s]-old[v][s]*old[v1][v];
@@ -183,7 +186,7 @@ public class Mat3d
 //		}
 //		return out;
 //	}
-	
+
 	public Mat3d divide(double d)
 	{
 		double d_inv = 1.0 / d;
