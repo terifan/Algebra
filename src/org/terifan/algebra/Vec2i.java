@@ -63,4 +63,20 @@ public class Vec2i implements Cloneable
 	{
 		return "{" + "x=" + x + ", y=" + y + '}';
 	}
+
+
+	public Vec2i set(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+
+
+	public Vec2i scale(int s)
+	{
+		this.x *= s;
+		this.y *= s;
+		return this;
+	}
 }
