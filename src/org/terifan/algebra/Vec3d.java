@@ -596,6 +596,12 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
+	public String toPrettyString()
+	{
+		return String.format("{x=%6.2f, y=%6.2f, z=%6.2f}", x, y, z);
+	}
+
+
 	public boolean isValid()
 	{
 		return !Double.isNaN(x) && !Double.isInfinite(x) && !Double.isNaN(y) && !Double.isInfinite(y) && !Double.isNaN(z) && !Double.isInfinite(z);

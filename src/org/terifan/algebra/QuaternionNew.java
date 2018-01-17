@@ -3,7 +3,7 @@ package org.terifan.algebra;
 
 /**
  * Quaternion implementation used to rotate points in 3D-space.
-*/
+ */
 public class QuaternionNew
 {
 	double w, x, y, z;
@@ -14,7 +14,7 @@ public class QuaternionNew
 	}
 
 
-	/** 
+	/**
 	 * from Euler (roll, pitch, yaw)
 	 */
 	public QuaternionNew(Vec3d aDirection)
@@ -50,9 +50,9 @@ public class QuaternionNew
 	 * Transforms a single Vector.
 	 *
 	 * @param aVector
-	 *    the vector to transform
+	 * the vector to transform
 	 * @return
-	 *    the provided vector
+	 * the provided vector
 	 */
 	public Vec3d transform(Vec3d aVector)
 	{
@@ -72,8 +72,8 @@ public class QuaternionNew
 	}
 
 
-    public QuaternionNew multiply(QuaternionNew aQuaternion)
-    {
+	public QuaternionNew multiply(QuaternionNew aQuaternion)
+	{
 		double tw = aQuaternion.w;
 		double tx = aQuaternion.x;
 		double ty = aQuaternion.y;
@@ -90,42 +90,42 @@ public class QuaternionNew
 		z = rz;
 
 		return this;
-    }
+	}
 
 
-    public QuaternionNew multiply(double aScalar)
-    {
+	public QuaternionNew multiply(double aScalar)
+	{
 		w *= aScalar;
 		x *= aScalar;
 		y *= aScalar;
 		z *= aScalar;
 
 		return this;
-    }
+	}
 
-	
-    public QuaternionNew add(QuaternionNew q)
-    {
+
+	public QuaternionNew add(QuaternionNew q)
+	{
 		w += q.w;
 		x += q.x;
 		y += q.y;
 		z += q.z;
 
 		return this;
-    }
+	}
 
-	
-    public QuaternionNew div(double aScalar)
-    {
+
+	public QuaternionNew div(double aScalar)
+	{
 		w /= aScalar;
 		x /= aScalar;
 		y /= aScalar;
 		z /= aScalar;
 
 		return this;
-    }
+	}
 
-	
+
 	public QuaternionNew normalize()
 	{
 		double sqrt = Math.sqrt(dot(this));
@@ -133,11 +133,11 @@ public class QuaternionNew
 		{
 			div(sqrt);
 		}
-		
+
 		return this;
 	}
 
-	
+
 	public double dot(QuaternionNew q)
 	{
 		return w * q.w + x * q.x + y * q.y + z * q.z;
@@ -148,18 +148,18 @@ public class QuaternionNew
 	{
 		return new Vec3d(x, y, z);
 	}
-	
-	
+
+
 	// TODO: maybe wrong
-    public QuaternionNew negate()
-    {
+	public QuaternionNew negate()
+	{
 		w = -w;
 		x = -x;
 		y = -y;
 		z = -z;
 
 		return this;
-    }
+	}
 
 
 	public QuaternionNew conjugate()
@@ -167,7 +167,7 @@ public class QuaternionNew
 		x = -x;
 		y = -y;
 		z = -z;
- 
+
 		return this;
 	}
 
@@ -181,7 +181,75 @@ public class QuaternionNew
 		return this;
 	}
 
-	
+
+	public static QuaternionNew lookAt(Vec3d aSourcePoint, Vec3d aDestPoint)
+	{
+		Vec3d forwardVector = aDestPoint.clone().subtract(aSourcePoint).normalize();
+
+		Vec3d forward = new Vec3d(1, 0, 0);
+		Vec3d up = new Vec3d(0, 1, 0);
+
+		double dot = forwardVector.dot(forward);
+
+		if (Math.abs(dot - (-1.0)) < 0.000001)
+		{
+			return new QuaternionNew(up.x, up.y, up.z, Math.PI);
+		}
+		if (Math.abs(dot - (1.0)) < 0.000001)
+		{
+			return new QuaternionNew().identity();
+		}
+
+		double rotAngle = Math.acos(dot);
+		Vec3d rotAxis = forward.cross(forwardVector);
+		rotAxis = rotAxis.normalize();
+
+		return createFromAxisAngle(rotAxis, rotAngle);
+	}
+
+
+	public static QuaternionNew createFromAxisAngle(Vec3d aAxis, double aAngle)
+	{
+		double halfAngle = aAngle * 0.5;
+		double s = Math.sin(halfAngle);
+		QuaternionNew q = new QuaternionNew();
+		q.x = aAxis.x * s;
+		q.y = aAxis.y * s;
+		q.z = aAxis.z * s;
+		q.w = Math.cos(halfAngle);
+		return q;
+	}
+
+
+	public Vec3d toEulerAngle()
+	{
+		Vec3d result = new Vec3d();
+
+		// roll (x-axis rotation)
+		double sinr = +2.0 * (w * x + y * z);
+		double cosr = +1.0 - 2.0 * (x * x + y * y);
+		result.x = Math.atan2(sinr, cosr);
+
+		// pitch (y-axis rotation)
+		double sinp = +2.0 * (w * y - z * x);
+		if (Math.abs(sinp) >= 1)
+		{
+			result.y = sinp < 0 ? -Math.PI / 2 : Math.PI / 2; // use 90 degrees if out of range
+		}
+		else
+		{
+			result.y = Math.asin(sinp);
+		}
+
+		// yaw (z-axis rotation)
+		double siny = +2.0 * (w * z + x * y);
+		double cosy = +1.0 - 2.0 * (y * y + z * z);
+		result.z = Math.atan2(siny, cosy);
+
+		return result;
+	}
+
+
 	@Override
 	public String toString()
 	{
