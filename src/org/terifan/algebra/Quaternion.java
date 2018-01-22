@@ -131,10 +131,11 @@ public final class Quaternion
 	 * Inverted rotations is used when a coordinate is rotated from world
 	 * space to object space.
 	 */
-	public void setInverted(boolean aState)
+	public Quaternion setInverted(boolean aState)
 	{
 		mInverted = aState;
 		mUpdatedAngle = true;
+		return this;
 	}
 
 

@@ -104,6 +104,19 @@ public class Vec3d implements Cloneable, Serializable
 	/**
 	 * Sets the coordinates of this Vector.
 	 */
+	public Vec3d set(double aValue)
+	{
+		x = aValue;
+		y = aValue;
+		z = aValue;
+
+		return this;
+	}
+
+
+	/**
+	 * Sets the coordinates of this Vector.
+	 */
 	public Vec3d set(Vec3f aVector)
 	{
 		x = aVector.x;
