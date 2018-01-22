@@ -53,7 +53,7 @@ public final class Quaternion
 		{
 			double scale = 1.0 / (x * x + y * y + z * z + w * w);
 
-			w =  w * scale;
+			w = w * scale;
 			x = -x * scale;
 			y = -y * scale;
 			z = -z * scale;
@@ -71,7 +71,7 @@ public final class Quaternion
 		mDirection.set(aVector);
 		mDirection.wrap();
 		mUpdatedAngle = true;
-		
+
 		return this;
 	}
 
@@ -84,7 +84,7 @@ public final class Quaternion
 		mDirection.set(x, y, z);
 		mDirection.wrap();
 		mUpdatedAngle = true;
-		
+
 		return this;
 	}
 
@@ -97,7 +97,7 @@ public final class Quaternion
 		mDirection.add(aVector);
 		mDirection.wrap();
 		mUpdatedAngle = true;
-		
+
 		return this;
 	}
 
@@ -110,7 +110,7 @@ public final class Quaternion
 		mDirection.add(x, y, z);
 		mDirection.wrap();
 		mUpdatedAngle = true;
-		
+
 		return this;
 	}
 
@@ -152,9 +152,9 @@ public final class Quaternion
 	 * Transforms a single Vector.
 	 *
 	 * @param aVector
-	 *    the vector to transform
+	 * the vector to transform
 	 * @return
-	 *    the provided vector
+	 * the provided vector
 	 */
 	public Vec3d transform(Vec3d aVector)
 	{
@@ -180,10 +180,10 @@ public final class Quaternion
 	 * Transforms a single Vector.<p>
 	 *
 	 * Note: it's necessary to call the initialize method before a vector can
-	 *       be transformed.
+	 * be transformed.
 	 *
 	 * @param aVector
-	 *    the vector to transform
+	 * the vector to transform
 	 */
 	public Vec3f transform(Vec3f aVector)
 	{
@@ -205,8 +205,8 @@ public final class Quaternion
 	}
 
 
-    public Quaternion multiply(Quaternion aQuaternion)
-    {
+	public Quaternion multiply(Quaternion aQuaternion)
+	{
 		double tw = aQuaternion.w;
 		double tx = aQuaternion.x;
 		double ty = aQuaternion.y;
@@ -223,7 +223,53 @@ public final class Quaternion
 		z = rz;
 
 		return this;
-    }
+	}
+
+	
+	// http://www.euclideanspace.com/maths/algebra/vectors/lookat/index.htm
+//	public Quaternion lookAt(Vec3d target, Vec3d current, Vec3d eye, Vec3d up)
+//	{
+//		// turn vectors into unit vectors 
+//		Vec3d n1 = current.clone().subtract(eye).normalize();
+//		Vec3d n2 = target.clone().subtract(eye).normalize();
+//		double d = n1.dot(n2);
+//
+//		// if no noticable rotation is available return zero rotation
+//		// this way we avoid Cross product artifacts 
+//		if (d > 0.9998)
+//		{
+//			return new Quaternion(0, 0, 1, 0);
+//		}
+//		// in this case there are 2 lines on the same axis 
+//		if (d < -0.9998)
+//		{
+//			n1.x += 0.5;
+//			// there are an infinite number of normals 
+//			// in this case. Anyone of these normals will be 
+//			// a valid rotation (180 degrees). so rotate the curr axis by 0.5 radians this way we get one of these normals 
+//		}
+//		Vec3d axis = n1.clone();
+//		axis.cross(n2);
+//		Quaternion pointToTarget = new Quaternion(1.0 + d, axis.x, axis.y, axis.z);
+//		pointToTarget.norm();
+//		// now twist around the target vector, so that the 'up' vector points along the z axis
+//		Mat3d projectionMatrix = new Mat3d();
+//		double a = pointToTarget.x;
+//		double b = pointToTarget.y;
+//		double c = pointToTarget.z;
+//		projectionMatrix.setColumn(0, b * b + c * c, -a * b, -a * c);
+//		projectionMatrix.setColumn(1, -b * a, a * a + c * c, -b * c);
+//		projectionMatrix.setColumn(2, -c * a, -c * b, a * a + b * b);
+//
+//		Vec3d upProjected = projectionMatrix.transform(up);
+//		Vec3d yaxisProjected = projectionMatrix.transform(new Vec3d(0, 1, 0));
+//		d = upProjected.dot(yaxisProjected);
+//		// so the axis of twist is n2 and the angle is arcos(d)
+//		//convert this to quat as follows   
+//		double s = Math.sqrt(1.0 - d * d);
+//		Quaternion twist = new Quaternion(d, n2.x * s, n2.y * s, n2.z * s); // ????????
+//		return pointToTarget.multiply(twist);
+//	}
 
 
 	@Override

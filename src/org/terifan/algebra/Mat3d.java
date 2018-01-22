@@ -1,6 +1,7 @@
 package org.terifan.algebra;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 
 public class Mat3d implements Serializable
@@ -8,6 +9,12 @@ public class Mat3d implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	private Vec3d[] v;
+
+
+	public Mat3d()
+	{
+		this(new Vec3d(),new Vec3d(),new Vec3d());
+	}
 
 
 	public Mat3d(Vec3d v0, Vec3d v1, Vec3d v2)
@@ -225,6 +232,17 @@ public class Mat3d implements Serializable
 //			 + v[2].x * (v[0].y * v[1].z - v[0].z * v[1].y);
 //	}
 
+	
+	public Mat3d setColumn(int aColumn, double... aValues)
+	{
+		for (int i = 0; i < aValues.length; i++)
+		{
+			v[aColumn].setComponent(aColumn, aValues[i]);
+		}
+
+		return this;
+	}
+	
 
 	@Override
 	public String toString()
