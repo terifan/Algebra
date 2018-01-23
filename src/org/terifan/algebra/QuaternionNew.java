@@ -251,7 +251,7 @@ public class QuaternionNew
 		return result;
 	}
 
-
+	
 	@Override
 	public String toString()
 	{

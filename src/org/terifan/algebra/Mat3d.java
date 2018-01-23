@@ -1,14 +1,13 @@
 package org.terifan.algebra;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 
 public class Mat3d implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private Vec3d[] v;
+	public final Vec3d[] m;
 
 
 	public Mat3d()
@@ -19,45 +18,56 @@ public class Mat3d implements Serializable
 
 	public Mat3d(Vec3d v0, Vec3d v1, Vec3d v2)
 	{
-		v = new Vec3d[3];
-		v[0] = v0;
-		v[1] = v1;
-		v[2] = v2;
+		m = new Vec3d[3];
+		m[0] = v0;
+		m[1] = v1;
+		m[2] = v2;
 	}
 
 
-	public Mat3d(Mat3d m)
+	public Mat3d(Mat3d aOther)
 	{
-		v = new Vec3d[3];
-		v[0] = m.v[0].clone();
-		v[1] = m.v[1].clone();
-		v[2] = m.v[2].clone();
+		m = new Vec3d[3];
+		m[0] = aOther.m[0].clone();
+		m[1] = aOther.m[1].clone();
+		m[2] = aOther.m[2].clone();
+	}
+
+
+	public Mat3d(double... aValues)
+	{
+		m = new Vec3d[]
+		{
+			new Vec3d(aValues[0],aValues[3],aValues[6]),
+			new Vec3d(aValues[1],aValues[4],aValues[7]),
+			new Vec3d(aValues[2],aValues[5],aValues[8])
+		};
 	}
 
 
 	public Mat3d transposeClone()
 	{
 		return new Mat3d(
-			new Vec3d(v[0].x, v[1].x, v[2].x),
-			new Vec3d(v[0].y, v[1].y, v[2].y),
-			new Vec3d(v[0].z, v[1].z, v[2].z));
+			new Vec3d(m[0].x, m[1].x, m[2].x),
+			new Vec3d(m[0].y, m[1].y, m[2].y),
+			new Vec3d(m[0].z, m[1].z, m[2].z));
 	}
 
 
 	public Mat3d transpose()
 	{
-		double t0 = v[0].y;
-		double t1 = v[0].z;
-		double t2 = v[1].z;
+		double t0 = m[0].y;
+		double t1 = m[0].z;
+		double t2 = m[1].z;
 
-		v[0].y = v[1].x;
-		v[0].z = v[2].x;
+		m[0].y = m[1].x;
+		m[0].z = m[2].x;
 
-		v[1].x = t0;
-		v[1].z = v[2].y;
+		m[1].x = t0;
+		m[1].z = m[2].y;
 
-		v[2].x = t1;
-		v[2].y = t2;
+		m[2].x = t1;
+		m[2].y = t2;
 
 		return this;
 	}
@@ -65,7 +75,7 @@ public class Mat3d implements Serializable
 
 	public Vec3d scale(Vec3d q)
 	{
-		return new Vec3d(v[0].dot(q), v[1].dot(q), v[2].dot(q));
+		return new Vec3d(m[0].dot(q), m[1].dot(q), m[2].dot(q));
 	}
 
 
@@ -103,31 +113,31 @@ public class Mat3d implements Serializable
 			int i1 = j;		    // Row with largest pivot candidate
 			for (int i = j + 1; i < 3; i++)
 			{
-				if (Math.abs(a.v[i].getComponent(j)) > Math.abs(a.v[i1].getComponent(j)))
+				if (Math.abs(a.m[i].getComponent(j)) > Math.abs(a.m[i1].getComponent(j)))
 				{
 					i1 = i;
 				}
 			}
 
 			// Swap rows i1 and j in a and b to put pivot on diagonal
-			a.v[i1].swap(a.v[j]);
-			b.v[i1].swap(b.v[j]);
+			a.m[i1].swap(a.m[j]);
+			b.m[i1].swap(b.m[j]);
 
 			// Scale row j to have a unit diagonal
-			if (a.v[j].getComponent(j) == 0)
+			if (a.m[j].getComponent(j) == 0)
 			{
-				throw new IllegalArgumentException("mat3::inverse: singular matrix; can't invert: " + a.v[j]);
+				throw new IllegalArgumentException("mat3::inverse: singular matrix; can't invert: " + a.m[j]);
 			}
-			b.v[j].divide(a.v[j].getComponent(j));
-			a.v[j].divide(a.v[j].getComponent(j));
+			b.m[j].divide(a.m[j].getComponent(j));
+			a.m[j].divide(a.m[j].getComponent(j));
 
 			// Eliminate off-diagonal elems in col j of a, doing identical ops to b
 			for (int i = 0; i < 3; i++)
 			{
 				if (i != j)
 				{
-					b.v[i].subtract(b.v[j].clone().scale(a.v[i].getComponent(j)));
-					a.v[i].subtract(a.v[j].clone().scale(a.v[i].getComponent(j)));
+					b.m[i].subtract(b.m[j].clone().scale(a.m[i].getComponent(j)));
+					a.m[i].subtract(a.m[j].clone().scale(a.m[i].getComponent(j)));
 				}
 			}
 		}
@@ -197,30 +207,30 @@ public class Mat3d implements Serializable
 	public Mat3d divide(double d)
 	{
 		double d_inv = 1.0 / d;
-		v[0].scale(d_inv);
-		v[1].scale(d_inv);
-		v[2].scale(d_inv);
+		m[0].scale(d_inv);
+		m[1].scale(d_inv);
+		m[2].scale(d_inv);
 		return this;
 	}
 
 
 	public Mat3d subtract(double d)
 	{
-		v[0].subtract(d);
-		v[1].subtract(d);
-		v[2].subtract(d);
+		m[0].subtract(d);
+		m[1].subtract(d);
+		m[2].subtract(d);
 		return this;
 	}
 
 
 	public double determinant()
 	{
-		double scalarA = v[0].x * v[1].y * v[2].z
-			           + v[0].y * v[1].z * v[2].x
-			           + v[0].z * v[1].x * v[2].y;
-		double scalarB = v[2].x * v[1].y * v[0].z
-			           + v[2].y * v[1].z * v[0].x
-			           + v[2].z * v[1].x * v[0].y;
+		double scalarA = m[0].x * m[1].y * m[2].z
+			           + m[0].y * m[1].z * m[2].x
+			           + m[0].z * m[1].x * m[2].y;
+		double scalarB = m[2].x * m[1].y * m[0].z
+			           + m[2].y * m[1].z * m[0].x
+			           + m[2].z * m[1].x * m[0].y;
 		return scalarA - scalarB;
 	}
 
@@ -237,7 +247,7 @@ public class Mat3d implements Serializable
 	{
 		for (int i = 0; i < aValues.length; i++)
 		{
-			v[aColumn].setComponent(aColumn, aValues[i]);
+			m[aColumn].setComponent(aColumn, aValues[i]);
 		}
 
 		return this;
@@ -254,7 +264,7 @@ public class Mat3d implements Serializable
 			{
 				s += ",";
 			}
-			s += v[c];
+			s += m[c];
 		}
 		return "{" + s + "}";
 	}
