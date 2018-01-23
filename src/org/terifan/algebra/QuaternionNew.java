@@ -150,7 +150,9 @@ public class QuaternionNew
 	}
 
 
-	// TODO: maybe wrong
+	/**
+	 * Flips the sign of each component of the quaternion.
+	 */
 	public QuaternionNew negate()
 	{
 		w = -w;
