@@ -1,6 +1,7 @@
 package org.terifan.algebra;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 
 /**
@@ -611,7 +612,7 @@ public class Vec3d implements Cloneable, Serializable
 
 	public String toPrettyString()
 	{
-		return String.format("{x=%6.2f, y=%6.2f, z=%6.2f}", x, y, z);
+		return String.format(new Locale("en", "US"), "{x=%8.3f, y=%8.3f, z=%8.3f}", x, y, z); // english locale to make sure decimal sign is a point and not a comma
 	}
 
 
@@ -889,10 +890,25 @@ public class Vec3d implements Cloneable, Serializable
 	{
 		return 0.212671 * x + 0.715160 * y + 0.072169 * z;
 	}
-	
-	
+
+
 	public double[] toArray()
 	{
 		return new double[]{x,y,z};
+	}
+
+
+	/**
+	 * Remove all but five decimals.
+	 */
+	public Vec3d truncate()
+	{
+		double s = 10000;
+
+		x = (int)(x * s) / s;
+		y = (int)(y * s) / s;
+		z = (int)(z * s) / s;
+
+		return this;
 	}
 }

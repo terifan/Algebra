@@ -125,11 +125,9 @@ public final class Quaternion
 
 
 	/**
-	 * Makes this Quaternion object inverted. An inverted Quaternion computes
-	 * the rotation in an inverted order (z,y,x instead of x,y,z).
+	 * Makes this Quaternion object inverted. An inverted Quaternion computes the rotation in an inverted order (z,y,x instead of x,y,z).
 	 *
-	 * Inverted rotations is used when a coordinate is rotated from world
-	 * space to object space.
+	 * Inverted rotations is used when a coordinate is rotated from world space to object space.
 	 */
 	public Quaternion setInverted(boolean aState)
 	{
@@ -151,14 +149,15 @@ public final class Quaternion
 	/**
 	 * Transforms a single Vector.
 	 *
-	 * @param aVector
-	 * the vector to transform
-	 * @return
-	 * the provided vector
+	 * @param aVector the vector to transform
+	 * @return the provided vector
 	 */
 	public Vec3d transform(Vec3d aVector)
 	{
-		init();
+		if (mUpdatedAngle)
+		{
+			init();
+		}
 
 		double cx = 2 * x;
 		double cy = 2 * y;
@@ -179,11 +178,9 @@ public final class Quaternion
 	/**
 	 * Transforms a single Vector.<p>
 	 *
-	 * Note: it's necessary to call the initialize method before a vector can
-	 * be transformed.
+	 * Note: it's necessary to call the initialize method before a vector can be transformed.
 	 *
-	 * @param aVector
-	 * the vector to transform
+	 * @param aVector the vector to transform
 	 */
 	public Vec3f transform(Vec3f aVector)
 	{
@@ -225,28 +222,90 @@ public final class Quaternion
 		return this;
 	}
 
-	
+
+	public Quaternion multiply(double aScalar)
+	{
+		w *= aScalar;
+		x *= aScalar;
+		y *= aScalar;
+		z *= aScalar;
+
+		return this;
+	}
+
+
+	public Quaternion add(Quaternion q)
+	{
+		w += q.w;
+		x += q.x;
+		y += q.y;
+		z += q.z;
+
+		return this;
+	}
+
+
+	public Quaternion add(double aScalar)
+	{
+		w += aScalar;
+		x += aScalar;
+		y += aScalar;
+		z += aScalar;
+
+		return this;
+	}
+
+
+	public Quaternion div(double aScalar)
+	{
+		w /= aScalar;
+		x /= aScalar;
+		y /= aScalar;
+		z /= aScalar;
+
+		return this;
+	}
+
+
+	public Quaternion normalize()
+	{
+		double sqrt = Math.sqrt(dot(this));
+		if (sqrt != 0)
+		{
+			div(sqrt);
+		}
+
+		return this;
+	}
+
+
+	public double dot(Quaternion q)
+	{
+		return w * q.w + x * q.x + y * q.y + z * q.z;
+	}
+
+
 	// http://www.euclideanspace.com/maths/algebra/vectors/lookat/index.htm
 //	public Quaternion lookAt(Vec3d target, Vec3d current, Vec3d eye, Vec3d up)
 //	{
-//		// turn vectors into unit vectors 
+//		// turn vectors into unit vectors
 //		Vec3d n1 = current.clone().subtract(eye).normalize();
 //		Vec3d n2 = target.clone().subtract(eye).normalize();
 //		double d = n1.dot(n2);
 //
 //		// if no noticable rotation is available return zero rotation
-//		// this way we avoid Cross product artifacts 
+//		// this way we avoid Cross product artifacts
 //		if (d > 0.9998)
 //		{
 //			return new Quaternion(0, 0, 1, 0);
 //		}
-//		// in this case there are 2 lines on the same axis 
+//		// in this case there are 2 lines on the same axis
 //		if (d < -0.9998)
 //		{
 //			n1.x += 0.5;
-//			// there are an infinite number of normals 
-//			// in this case. Anyone of these normals will be 
-//			// a valid rotation (180 degrees). so rotate the curr axis by 0.5 radians this way we get one of these normals 
+//			// there are an infinite number of normals
+//			// in this case. Anyone of these normals will be
+//			// a valid rotation (180 degrees). so rotate the curr axis by 0.5 radians this way we get one of these normals
 //		}
 //		Vec3d axis = n1.clone();
 //		axis.cross(n2);
@@ -265,11 +324,51 @@ public final class Quaternion
 //		Vec3d yaxisProjected = projectionMatrix.transform(new Vec3d(0, 1, 0));
 //		d = upProjected.dot(yaxisProjected);
 //		// so the axis of twist is n2 and the angle is arcos(d)
-//		//convert this to quat as follows   
+//		//convert this to quat as follows
 //		double s = Math.sqrt(1.0 - d * d);
 //		Quaternion twist = new Quaternion(d, n2.x * s, n2.y * s, n2.z * s); // ????????
 //		return pointToTarget.multiply(twist);
 //	}
+	public Quaternion lerp(Quaternion q1, Quaternion q2, float maxAngle)
+	{
+		if (maxAngle < 0.001f)
+		{
+			// No rotation allowed. Prevent dividing by 0 later.
+			return q1;
+		}
+
+		double cosTheta = q1.dot(q2);
+
+		// q1 and q2 are already equal.
+		// Force q2 just to be sure
+		if (cosTheta > 0.9999f)
+		{
+			return q2;
+		}
+
+		// Avoid taking the long path around the sphere
+		if (cosTheta < 0)
+		{
+			q1 = q1.multiply(-1);
+			cosTheta *= -1.0f;
+		}
+
+		double angle = Math.acos(cosTheta);
+
+		// If there is only a 2&deg; difference, and we are allowed 5&deg;,
+		// then we arrived.
+		if (angle < maxAngle)
+		{
+			return q2;
+		}
+
+		double fT = maxAngle / angle;
+		angle = maxAngle;
+		Quaternion z1 = q1.multiply(Math.sin((1.0f - fT) * angle));
+		Quaternion z2 = q2.multiply(Math.sin(fT * angle));
+
+		return z1.add(z2).div(Math.sin(angle)).normalize();
+	}
 
 
 	@Override
