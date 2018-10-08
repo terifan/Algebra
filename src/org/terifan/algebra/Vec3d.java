@@ -733,6 +733,16 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
+	public int toRGB(double aScale)
+	{
+		int r = Math.max(Math.min((int)(x * aScale + 0.5), 255), 0) << 16;
+		int g = Math.max(Math.min((int)(y * aScale + 0.5), 255), 0) << 8;
+		int b = Math.max(Math.min((int)(z * aScale + 0.5), 255), 0);
+
+		return r + g + b;
+	}
+
+
 	public Vec3d swap(Vec3d aVector)
 	{
 		double t;
