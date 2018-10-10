@@ -911,4 +911,10 @@ public class Vec3d implements Cloneable, Serializable
 
 		return this;
 	}
+	
+	
+	public Vec2d toVec2d()
+	{
+		return new Vec2d(x, y);
+	}	
 }
