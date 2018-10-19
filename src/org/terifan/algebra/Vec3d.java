@@ -725,16 +725,6 @@ public class Vec3d implements Cloneable, Serializable
 	/**
 	 * Return XYZ as 8 bit RGB values packed into an int. Components are clamped into range 0-255 with X component shifted 16 bits, Y component shifted 8 bits.
 	 */
-	public int toRGB()
-	{
-		int r = Math.max(Math.min((int)(x + 0.5), 255), 0) << 16;
-		int g = Math.max(Math.min((int)(y + 0.5), 255), 0) << 8;
-		int b = Math.max(Math.min((int)(z + 0.5), 255), 0);
-
-		return r + g + b;
-	}
-
-
 	public int toRGB(double aScale)
 	{
 		int r = Math.max(Math.min((int)(x * aScale + 0.5), 255), 0) << 16;

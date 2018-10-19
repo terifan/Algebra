@@ -99,6 +99,38 @@ public class Mat4d
 	}
 
 
+	public Vec3d transformPoint(double x, double y, double z)
+	{
+		double w = get(3, 3);
+
+		w += get(3, 0) * x;
+		w += get(3, 1) * y;
+		w += get(3, 2) * z;
+
+		if (w == 0)
+		{
+			throw new Error("div 0");
+		}
+
+		double invW = 1.0 / w;
+
+		Vec3d res = new Vec3d(0);
+
+		for (int r = 0; r < 3; r++)
+		{
+			res.set(r, get(r, 3));
+
+			res.add(r, x * get(r, 0));
+			res.add(r, y * get(r, 1));
+			res.add(r, z * get(r, 2));
+
+			res.scale(r, invW);
+		}
+
+		return res;
+	}
+
+
 	public static Mat4d scale(Mat4d left, Mat4d right)
 	{
 		Mat4d res = new Mat4d();
