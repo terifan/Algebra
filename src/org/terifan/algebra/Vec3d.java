@@ -9,6 +9,8 @@ import java.util.Locale;
  */
 public class Vec3d implements Cloneable, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	public final static Vec3d ZERO = new Vec3d()
 	{
 		@Override
@@ -453,7 +455,7 @@ public class Vec3d implements Cloneable, Serializable
 	 *
 	 *   return x * x + y * y + z * z;
 	 */
-	public double length2()
+	public double lenSqr()
 	{
 		return x * x + y * y + z * z;
 	}
@@ -850,12 +852,6 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	public double lenSqr()
-	{
-		return dot(this);
-	}
-
-
 	public Vec2d getXY()
 	{
 		return new Vec2d(x, y);
@@ -920,5 +916,11 @@ public class Vec3d implements Cloneable, Serializable
 		z = (int)(z * s) / s;
 
 		return this;
+	}
+
+
+	public Vec2d toVec2d()
+	{
+		return new Vec2d(x, y);
 	}
 }

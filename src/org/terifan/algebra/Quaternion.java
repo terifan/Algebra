@@ -54,7 +54,7 @@ public final class Quaternion
 //		w_ = cosY * cosX * cosZ + sinY * sinX * sinZ;
 //		x_ = cosY * sinX * cosZ + sinY * cosX * sinZ;
 //		y_ = sinY * cosX * cosZ - cosY * sinX * sinZ;
-//		z_ = cosY * cosX * sinZ - sinY * sinX * cosZ;		
+//		z_ = cosY * cosX * sinZ - sinY * sinX * cosZ;
 		return qt;
 	}
 
@@ -427,7 +427,7 @@ public final class Quaternion
 			// special case when vectors in opposite directions: there is no "ideal" rotation axis so guess one; any will do as long as it's perpendicular to start
 			rotationAxis = new Vec3d(1, 0, 0).cross(start); // RIGHT
 
-			if (rotationAxis.length2() < 0.01) // bad luck, they were parallel, try again!
+			if (rotationAxis.lenSqr() < 0.01) // bad luck, they were parallel, try again!
 			{
 				rotationAxis = new Vec3d(0, 1, 0).cross(start); // UP
 			}
