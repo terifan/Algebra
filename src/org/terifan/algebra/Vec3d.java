@@ -2,12 +2,16 @@ package org.terifan.algebra;
 
 import java.io.Serializable;
 import java.util.Locale;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.BundlableValue;
+import org.terifan.bundle.Bundle;
+import org.terifan.bundle.Bundle.BundleArray;
 
 
 /**
  * Vector class represents a point in space defined by x, y and z coordinates.
  */
-public class Vec3d implements Cloneable, Serializable
+public class Vec3d implements Cloneable, Serializable, Bundlable, BundlableValue<BundleArray>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -912,5 +916,39 @@ public class Vec3d implements Cloneable, Serializable
 	public Vec2d toVec2d()
 	{
 		return new Vec2d(x, y);
+	}
+
+
+	@Override
+	public void readExternal(Bundle aBundle)
+	{
+		x = aBundle.getDouble("x");
+		y = aBundle.getDouble("y");
+		z = aBundle.getDouble("z");
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle)
+	{
+		aBundle.putNumber("x", x);
+		aBundle.putNumber("y", y);
+		aBundle.putNumber("z", z);
+	}
+
+
+	@Override
+	public void readExternal(BundleArray aParts)
+	{
+		x = aParts.getNumber(0).intValue();
+		y = aParts.getNumber(1).intValue();
+		z = aParts.getNumber(2).intValue();
+	}
+
+
+	@Override
+	public BundleArray writeExternal()
+	{
+		return new BundleArray(x, y, z);
 	}
 }
