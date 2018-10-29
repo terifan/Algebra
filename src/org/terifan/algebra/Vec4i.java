@@ -4,10 +4,10 @@ import java.io.Serializable;
 import org.terifan.bundle.Bundlable;
 import org.terifan.bundle.BundlableValue;
 import org.terifan.bundle.Bundle;
-import org.terifan.bundle.Bundle.BundleArray;
+import org.terifan.bundle.Array;
 
 
-public class Vec4i implements Serializable, Bundlable, BundlableValue<BundleArray>
+public class Vec4i implements Serializable, Bundlable, BundlableValue<Array>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -116,18 +116,18 @@ public class Vec4i implements Serializable, Bundlable, BundlableValue<BundleArra
 
 
 	@Override
-	public void readExternal(BundleArray aParts)
+	public void readExternal(Array aParts)
 	{
-		x = aParts.getNumber(0).intValue();
-		y = aParts.getNumber(1).intValue();
-		z = aParts.getNumber(2).intValue();
-		w = aParts.getNumber(3).intValue();
+		x = aParts.getInt(0);
+		y = aParts.getInt(1);
+		z = aParts.getInt(2);
+		w = aParts.getInt(3);
 	}
 
 
 	@Override
-	public BundleArray writeExternal()
+	public Array writeExternal()
 	{
-		return new BundleArray(x, y, z, w);
+		return new Array(x, y, z, w);
 	}
 }
