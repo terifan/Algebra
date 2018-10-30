@@ -1,8 +1,17 @@
 package org.terifan.algebra;
 
+import java.io.Serializable;
+import org.terifan.bundle.Array;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.BundlableValue;
+import org.terifan.bundle.Bundle;
 
-public class Vec2d implements Cloneable
+
+
+public class Vec2d implements Cloneable, Serializable, Bundlable, BundlableValue<Array>
 {
+	private static final long serialVersionUID = 1L;
+
 	public double x;
 	public double y;
 
@@ -90,5 +99,36 @@ public class Vec2d implements Cloneable
 	public Vec2d clone()
 	{
 		return new Vec2d(x, y);
+	}
+
+
+	@Override
+	public void readExternal(Bundle aBundle)
+	{
+		x = aBundle.getDouble("x");
+		y = aBundle.getDouble("y");
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle)
+	{
+		aBundle.putNumber("x", x);
+		aBundle.putNumber("y", y);
+	}
+
+
+	@Override
+	public void readExternal(Array aParts)
+	{
+		x = aParts.getDouble(0);
+		y = aParts.getDouble(1);
+	}
+
+
+	@Override
+	public Array writeExternal()
+	{
+		return new Array(x, y);
 	}
 }

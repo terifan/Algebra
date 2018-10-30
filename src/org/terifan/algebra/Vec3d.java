@@ -846,46 +846,6 @@ public class Vec3d implements Cloneable, Serializable, Bundlable, BundlableValue
 	}
 
 
-	public Vec2d getXY()
-	{
-		return new Vec2d(x, y);
-	}
-
-
-//	@Override
-//	public void readExternal(Bundle aBundle) throws IOException
-//	{
-//		x = aBundle.getDouble("x", 0);
-//		y = aBundle.getDouble("y", 0);
-//		z = aBundle.getDouble("z", 0);
-//	}
-//
-//
-//	@Override
-//	public void writeExternal(Bundle aBundle) throws IOException
-//	{
-//		aBundle.putDouble("x", x);
-//		aBundle.putDouble("y", y);
-//		aBundle.putDouble("z", z);
-//	}
-
-
-	public static Vec3d decode(String aString)
-	{
-		Vec3d v = new Vec3d();
-		aString = aString.substring(1, aString.length() - 2);
-		for (String s : aString.split(","))
-		{
-			String[] t = s.trim().split("=");
-			double q = Double.parseDouble(t[1]);
-			if (t[0].equals("x")) v.x = q;
-			if (t[0].equals("y")) v.y = q;
-			if (t[0].equals("z")) v.z = q;
-		}
-		return v;
-	}
-
-
 	public double luminance()
 	{
 		return 0.212671 * x + 0.715160 * y + 0.072169 * z;
@@ -916,6 +876,24 @@ public class Vec3d implements Cloneable, Serializable, Bundlable, BundlableValue
 	public Vec2d toVec2d()
 	{
 		return new Vec2d(x, y);
+	}
+
+
+	public Vec2f toVec2f()
+	{
+		return new Vec2f((float)x, (float)y);
+	}
+
+
+	public Vec3f toVec3f()
+	{
+		return new Vec3f((float)x, (float)y, (float)z);
+	}
+
+
+	public Vec4d toVec4d()
+	{
+		return new Vec4d(x, y, z, 0);
 	}
 
 

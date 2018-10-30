@@ -1,10 +1,15 @@
 package org.terifan.algebra;
 
+import org.terifan.bundle.Array;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.BundlableValue;
+import org.terifan.bundle.Bundle;
+
 
 /**
  * Vector class represents a point in space defined by x, y and z coordinates.
  */
-public class Vec3f
+public class Vec3f implements Bundlable, BundlableValue<Array>
 {
 	public final static Vec3f ZERO = new Vec3f()
 	{
@@ -49,15 +54,6 @@ public class Vec3f
 	/**
 	 * Constructs a new Vector3f.
 	 */
-	public Vec3f(double x, double y, double z)
-	{
-		set(x, y, z);
-	}
-
-
-	/**
-	 * Constructs a new Vector3f.
-	 */
 	public Vec3f(Vec3d aVector)
 	{
 		set(aVector);
@@ -72,19 +68,6 @@ public class Vec3f
 		this.x = x;
 		this.y = y;
 		this.z = z;
-
-		return this;
-	}
-
-
-	/**
-	 * Sets the coordinates of this Vector3f to (x,y,z).
-	 */
-	public Vec3f set(double x, double y, double z)
-	{
-		this.x = (float)x;
-		this.y = (float)y;
-		this.z = (float)z;
 
 		return this;
 	}
@@ -254,19 +237,6 @@ public class Vec3f
 
 
 	public Vec3f scale(float aScale)
-	{
-		if (aScale != 1)
-		{
-			x *= aScale;
-			y *= aScale;
-			z *= aScale;
-		}
-
-		return this;
-	}
-
-
-	public Vec3f scale(double aScale)
 	{
 		if (aScale != 1)
 		{
@@ -807,5 +777,39 @@ public class Vec3f
 	public double length2()
 	{
 		return x * x + y * y + z * z;
+	}
+
+
+	@Override
+	public void readExternal(Bundle aBundle)
+	{
+		x = aBundle.getFloat("x");
+		y = aBundle.getFloat("y");
+		z = aBundle.getFloat("z");
+	}
+
+
+	@Override
+	public void writeExternal(Bundle aBundle)
+	{
+		aBundle.putNumber("x", x);
+		aBundle.putNumber("y", y);
+		aBundle.putNumber("z", z);
+	}
+
+
+	@Override
+	public void readExternal(Array aParts)
+	{
+		x = aParts.getFloat(0);
+		y = aParts.getFloat(1);
+		z = aParts.getFloat(2);
+	}
+
+
+	@Override
+	public Array writeExternal()
+	{
+		return new Array(x, y, z);
 	}
 }
