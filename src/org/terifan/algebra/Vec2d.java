@@ -61,6 +61,24 @@ public class Vec2d implements Cloneable, Serializable, Bundlable, BundlableValue
 	}
 
 
+	public Vec2d subtract(Vec2d v)
+	{
+		return new Vec2d(x - v.x, y - v.y);
+	}
+
+
+	public Vec2d subtract(double x, double y)
+	{
+		return new Vec2d(x - this.x, y - this.y);
+	}
+
+
+	public Vec2d multiply(Vec2d v)
+	{
+		return new Vec2d(x * v.x, y * v.y);
+	}
+
+
 	public Vec2d scale(double aScale)
 	{
 		x *= aScale;
@@ -88,10 +106,28 @@ public class Vec2d implements Cloneable, Serializable, Bundlable, BundlableValue
 	}
 
 
+	public double distanceSqr(Vec2d v)
+	{
+		return (x - v.x) * (x - v.x) + (y - v.y) * (y - v.y);
+	}
+
+
+	public double distance(Vec2d v)
+	{
+		return Math.sqrt(distanceSqr(v));
+	}
+
+
+	public double dot(Vec2d v)
+	{
+		return x * v.x + y * v.y;
+	}
+
+
 	@Override
 	public String toString()
 	{
-		return "Vec2f{" + "x=" + x + ", y=" + y + '}';
+		return "Vec2d{" + "x=" + x + ", y=" + y + '}';
 	}
 
 
@@ -130,5 +166,37 @@ public class Vec2d implements Cloneable, Serializable, Bundlable, BundlableValue
 	public Array writeExternal()
 	{
 		return new Array(x, y);
+	}
+
+
+	public double distanceLineSegment(Vec2d v, Vec2d w)
+	{
+		double l2 = v.distanceSqr(w);
+
+		if (l2 == 0.0)
+		{
+			return distance(v);
+		}
+
+		Vec2d vw = w.subtract(v);
+
+		double t = (dot(vw) - v.dot(vw)) / l2;
+
+		Vec2d z;
+
+		if (t < 0.0)
+		{
+			z = v;
+		}
+		else if (t > 1.0)
+		{
+			z = w;
+		}
+		else
+		{
+			z = v.add(vw.scale(t));
+		}
+
+		return distance(z);
 	}
 }
