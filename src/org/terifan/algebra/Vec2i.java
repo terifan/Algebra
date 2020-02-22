@@ -169,6 +169,6 @@ public class Vec2i implements Cloneable, Bundlable, BundlableValue<Array>
 	@Override
 	public Array writeExternal()
 	{
-		return new Array(x, y);
+		return Array.of(x, y);
 	}
 }

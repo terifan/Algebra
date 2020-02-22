@@ -128,6 +128,6 @@ public class Vec4i implements Serializable, Bundlable, BundlableValue<Array>
 	@Override
 	public Array writeExternal()
 	{
-		return new Array(x, y, z, w);
+		return Array.of(x, y, z, w);
 	}
 }

@@ -51,6 +51,6 @@ public class Vec3i implements Bundlable, BundlableValue<Array>
 	@Override
 	public Array writeExternal()
 	{
-		return new Array(x, y, z);
+		return Array.of(x, y, z);
 	}
 }

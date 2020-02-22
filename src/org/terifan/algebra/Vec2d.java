@@ -165,7 +165,7 @@ public class Vec2d implements Cloneable, Serializable, Bundlable, BundlableValue
 	@Override
 	public Array writeExternal()
 	{
-		return new Array(x, y);
+		return Array.of(x, y);
 	}
 
 

@@ -89,6 +89,6 @@ public class Vec4f implements Bundlable, BundlableValue<Array>
 	@Override
 	public Array writeExternal()
 	{
-		return new Array(x, y, z, w);
+		return Array.of(x, y, z, w);
 	}
 }

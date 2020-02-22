@@ -927,6 +927,6 @@ public class Vec3d implements Cloneable, Serializable, Bundlable, BundlableValue
 	@Override
 	public Array writeExternal()
 	{
-		return new Array(x, y, z);
+		return Array.of(x, y, z);
 	}
 }

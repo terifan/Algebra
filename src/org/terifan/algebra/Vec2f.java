@@ -73,6 +73,6 @@ public class Vec2f implements Bundlable, BundlableValue<Array>
 	@Override
 	public Array writeExternal()
 	{
-		return new Array(x, y);
+		return Array.of(x, y);
 	}
 }
