@@ -1,14 +1,10 @@
 package org.terifan.algebra;
 
 import java.io.Serializable;
-import org.terifan.bundle.Array;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.BundlableValue;
-import org.terifan.bundle.Bundle;
 
 
 
-public class Vec2d implements Cloneable, Serializable, Bundlable, BundlableValue<Array>
+public class Vec2d implements Cloneable, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -138,35 +134,35 @@ public class Vec2d implements Cloneable, Serializable, Bundlable, BundlableValue
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		x = aBundle.getDouble("x");
-		y = aBundle.getDouble("y");
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		aBundle.putNumber("x", x);
-		aBundle.putNumber("y", y);
-	}
-
-
-	@Override
-	public void readExternal(Array aParts)
-	{
-		x = aParts.getDouble(0);
-		y = aParts.getDouble(1);
-	}
-
-
-	@Override
-	public Array writeExternal()
-	{
-		return Array.of(x, y);
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		x = aBundle.getDouble("x");
+//		y = aBundle.getDouble("y");
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		aBundle.putNumber("x", x);
+//		aBundle.putNumber("y", y);
+//	}
+//
+//
+//	@Override
+//	public void readExternal(Array aParts)
+//	{
+//		x = aParts.getDouble(0);
+//		y = aParts.getDouble(1);
+//	}
+//
+//
+//	@Override
+//	public Array writeExternal()
+//	{
+//		return Array.of(x, y);
+//	}
 
 
 	public double distanceLineSegment(Vec2d v, Vec2d w)

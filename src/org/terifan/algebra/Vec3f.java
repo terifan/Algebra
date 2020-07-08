@@ -1,15 +1,10 @@
 package org.terifan.algebra;
 
-import org.terifan.bundle.Array;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.BundlableValue;
-import org.terifan.bundle.Bundle;
-
 
 /**
  * Vector class represents a point in space defined by x, y and z coordinates.
  */
-public class Vec3f implements Bundlable, BundlableValue<Array>
+public class Vec3f
 {
 	public final static Vec3f ZERO = new Vec3f()
 	{
@@ -780,36 +775,36 @@ public class Vec3f implements Bundlable, BundlableValue<Array>
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		x = aBundle.getFloat("x");
-		y = aBundle.getFloat("y");
-		z = aBundle.getFloat("z");
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		aBundle.putNumber("x", x);
-		aBundle.putNumber("y", y);
-		aBundle.putNumber("z", z);
-	}
-
-
-	@Override
-	public void readExternal(Array aParts)
-	{
-		x = aParts.getFloat(0);
-		y = aParts.getFloat(1);
-		z = aParts.getFloat(2);
-	}
-
-
-	@Override
-	public Array writeExternal()
-	{
-		return Array.of(x, y, z);
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		x = aBundle.getFloat("x");
+//		y = aBundle.getFloat("y");
+//		z = aBundle.getFloat("z");
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		aBundle.putNumber("x", x);
+//		aBundle.putNumber("y", y);
+//		aBundle.putNumber("z", z);
+//	}
+//
+//
+//	@Override
+//	public void readExternal(Array aParts)
+//	{
+//		x = aParts.getFloat(0);
+//		y = aParts.getFloat(1);
+//		z = aParts.getFloat(2);
+//	}
+//
+//
+//	@Override
+//	public Array writeExternal()
+//	{
+//		return Array.of(x, y, z);
+//	}
 }

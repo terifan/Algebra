@@ -1,12 +1,7 @@
 package org.terifan.algebra;
 
-import org.terifan.bundle.Array;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.BundlableValue;
-import org.terifan.bundle.Bundle;
 
-
-public class Vec4d implements Bundlable, BundlableValue<Array>
+public class Vec4d
 {
 	public double x;
 	public double y;
@@ -79,39 +74,39 @@ public class Vec4d implements Bundlable, BundlableValue<Array>
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		x = aBundle.getDouble("x");
-		y = aBundle.getDouble("y");
-		z = aBundle.getDouble("z");
-		w = aBundle.getDouble("w");
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		aBundle.putNumber("x", x);
-		aBundle.putNumber("y", y);
-		aBundle.putNumber("z", z);
-		aBundle.putNumber("w", w);
-	}
-
-
-	@Override
-	public void readExternal(Array aParts)
-	{
-		x = aParts.getDouble(0);
-		y = aParts.getDouble(1);
-		z = aParts.getDouble(2);
-		w = aParts.getDouble(3);
-	}
-
-
-	@Override
-	public Array writeExternal()
-	{
-		return Array.of(x, y, z, w);
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		x = aBundle.getDouble("x");
+//		y = aBundle.getDouble("y");
+//		z = aBundle.getDouble("z");
+//		w = aBundle.getDouble("w");
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		aBundle.putNumber("x", x);
+//		aBundle.putNumber("y", y);
+//		aBundle.putNumber("z", z);
+//		aBundle.putNumber("w", w);
+//	}
+//
+//
+//	@Override
+//	public void readExternal(Array aParts)
+//	{
+//		x = aParts.getDouble(0);
+//		y = aParts.getDouble(1);
+//		z = aParts.getDouble(2);
+//		w = aParts.getDouble(3);
+//	}
+//
+//
+//	@Override
+//	public Array writeExternal()
+//	{
+//		return Array.of(x, y, z, w);
+//	}
 }

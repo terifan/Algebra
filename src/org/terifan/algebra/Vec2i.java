@@ -1,12 +1,7 @@
 package org.terifan.algebra;
 
-import org.terifan.bundle.Array;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.BundlableValue;
-import org.terifan.bundle.Bundle;
 
-
-public class Vec2i implements Cloneable, Bundlable, BundlableValue<Array>
+public class Vec2i implements Cloneable
 {
 	public int x;
 	public int y;
@@ -142,33 +137,33 @@ public class Vec2i implements Cloneable, Bundlable, BundlableValue<Array>
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		x = aBundle.getInt("x");
-		y = aBundle.getInt("y");
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		aBundle.putNumber("x", x);
-		aBundle.putNumber("y", y);
-	}
-
-
-	@Override
-	public void readExternal(Array aParts)
-	{
-		x = aParts.getInt(0);
-		y = aParts.getInt(1);
-	}
-
-
-	@Override
-	public Array writeExternal()
-	{
-		return Array.of(x, y);
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		x = aBundle.getInt("x");
+//		y = aBundle.getInt("y");
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		aBundle.putNumber("x", x);
+//		aBundle.putNumber("y", y);
+//	}
+//
+//
+//	@Override
+//	public void readExternal(Array aParts)
+//	{
+//		x = aParts.getInt(0);
+//		y = aParts.getInt(1);
+//	}
+//
+//
+//	@Override
+//	public Array writeExternal()
+//	{
+//		return Array.of(x, y);
+//	}
 }

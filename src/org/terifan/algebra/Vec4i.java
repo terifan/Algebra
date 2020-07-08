@@ -1,13 +1,7 @@
 package org.terifan.algebra;
 
-import java.io.Serializable;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.BundlableValue;
-import org.terifan.bundle.Bundle;
-import org.terifan.bundle.Array;
 
-
-public class Vec4i implements Serializable, Bundlable, BundlableValue<Array>
+public class Vec4i
 {
 	private static final long serialVersionUID = 1L;
 
@@ -95,39 +89,39 @@ public class Vec4i implements Serializable, Bundlable, BundlableValue<Array>
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		x = aBundle.getInt("x");
-		y = aBundle.getInt("y");
-		z = aBundle.getInt("z");
-		w = aBundle.getInt("w");
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		aBundle.putNumber("x", x);
-		aBundle.putNumber("y", y);
-		aBundle.putNumber("z", z);
-		aBundle.putNumber("w", w);
-	}
-
-
-	@Override
-	public void readExternal(Array aParts)
-	{
-		x = aParts.getInt(0);
-		y = aParts.getInt(1);
-		z = aParts.getInt(2);
-		w = aParts.getInt(3);
-	}
-
-
-	@Override
-	public Array writeExternal()
-	{
-		return Array.of(x, y, z, w);
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		x = aBundle.getInt("x");
+//		y = aBundle.getInt("y");
+//		z = aBundle.getInt("z");
+//		w = aBundle.getInt("w");
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		aBundle.putNumber("x", x);
+//		aBundle.putNumber("y", y);
+//		aBundle.putNumber("z", z);
+//		aBundle.putNumber("w", w);
+//	}
+//
+//
+//	@Override
+//	public void readExternal(Array aParts)
+//	{
+//		x = aParts.getInt(0);
+//		y = aParts.getInt(1);
+//		z = aParts.getInt(2);
+//		w = aParts.getInt(3);
+//	}
+//
+//
+//	@Override
+//	public Array writeExternal()
+//	{
+//		return Array.of(x, y, z, w);
+//	}
 }

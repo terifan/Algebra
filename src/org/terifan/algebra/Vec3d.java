@@ -2,16 +2,12 @@ package org.terifan.algebra;
 
 import java.io.Serializable;
 import java.util.Locale;
-import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.BundlableValue;
-import org.terifan.bundle.Bundle;
-import org.terifan.bundle.Array;
 
 
 /**
  * Vector class represents a point in space defined by x, y and z coordinates.
  */
-public class Vec3d implements Cloneable, Serializable, Bundlable, BundlableValue<Array>
+public class Vec3d implements Cloneable, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -897,36 +893,36 @@ public class Vec3d implements Cloneable, Serializable, Bundlable, BundlableValue
 	}
 
 
-	@Override
-	public void readExternal(Bundle aBundle)
-	{
-		x = aBundle.getDouble("x");
-		y = aBundle.getDouble("y");
-		z = aBundle.getDouble("z");
-	}
-
-
-	@Override
-	public void writeExternal(Bundle aBundle)
-	{
-		aBundle.putNumber("x", x);
-		aBundle.putNumber("y", y);
-		aBundle.putNumber("z", z);
-	}
-
-
-	@Override
-	public void readExternal(Array aParts)
-	{
-		x = aParts.getDouble(0);
-		y = aParts.getDouble(1);
-		z = aParts.getDouble(2);
-	}
-
-
-	@Override
-	public Array writeExternal()
-	{
-		return Array.of(x, y, z);
-	}
+//	@Override
+//	public void readExternal(Bundle aBundle)
+//	{
+//		x = aBundle.getDouble("x");
+//		y = aBundle.getDouble("y");
+//		z = aBundle.getDouble("z");
+//	}
+//
+//
+//	@Override
+//	public void writeExternal(Bundle aBundle)
+//	{
+//		aBundle.putNumber("x", x);
+//		aBundle.putNumber("y", y);
+//		aBundle.putNumber("z", z);
+//	}
+//
+//
+//	@Override
+//	public void readExternal(Array aParts)
+//	{
+//		x = aParts.getDouble(0);
+//		y = aParts.getDouble(1);
+//		z = aParts.getDouble(2);
+//	}
+//
+//
+//	@Override
+//	public Array writeExternal()
+//	{
+//		return Array.of(x, y, z);
+//	}
 }
