@@ -20,6 +20,7 @@ public class Vec3d implements Cloneable, Serializable
 		}
 	};
 
+
 	public double x;
 	public double y;
 	public double z;
@@ -866,6 +867,18 @@ public class Vec3d implements Cloneable, Serializable
 		z = (int)(z * s) / s;
 
 		return this;
+	}
+
+
+	public static Vec3d fromRGB(int aRGB)
+	{
+		return new Vec3d((0xFF & (aRGB >> 16)) / 255.0, (0xFF & (aRGB >> 8)) / 255.0, (0xFF & aRGB) / 255.0);
+	}
+
+
+	public int toRGB()
+	{
+		return (Math.max(0, Math.min(255, (int)(255 * x))) << 16) + (Math.max(0, Math.min(255, (int)(255 * y))) << 8) + Math.max(0, Math.min(255, (int)(255 * z)));
 	}
 
 
