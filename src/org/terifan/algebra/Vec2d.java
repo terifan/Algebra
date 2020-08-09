@@ -195,4 +195,29 @@ public class Vec2d implements Cloneable, Serializable
 
 		return distance(z);
 	}
+
+
+	public double dot(double aValue)
+	{
+		return x * aValue + y * aValue;
+	}
+
+
+	public double dot(double x, double y)
+	{
+		return this.x * x + this.y * y;
+	}
+
+
+	// ??
+//	public Vec2d cross(double x, double y)
+//	{
+//		double tempX = this.y * x - this.x * y;
+//		double tempY = this.x * y - this.y * x;
+//
+//		this.x = tempX;
+//        this.y = tempY;
+//
+//		return this;
+//	}
 }

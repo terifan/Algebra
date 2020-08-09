@@ -305,11 +305,12 @@ public class Vec3d implements Cloneable, Serializable
 	}
 
 
-	public void fixIllegalValues()
+	public Vec3d fixIllegalValues()
 	{
 		if (x == -0 || Double.isNaN(x) || Double.isInfinite(x) || Double.isFinite(x)) x = 0;
 		if (y == -0 || Double.isNaN(y) || Double.isInfinite(y) || Double.isFinite(y)) y = 0;
 		if (z == -0 || Double.isNaN(z) || Double.isInfinite(z) || Double.isFinite(z)) z = 0;
+		return this;
 	}
 
 
@@ -609,7 +610,8 @@ public class Vec3d implements Cloneable, Serializable
 	@Override
 	public String toString()
 	{
-		return ("{x=" + x + ", y=" + y + ", z=" + z + "}").replace(".0,", ",").replace(".0}", "}");
+//		return ("{x=" + x + ", y=" + y + ", z=" + z + "}").replace(".0,", ",").replace(".0}", "}");
+		return String.format("{x=%7.3f, y=%7.3f, z=%7.3f}", x, y, z);
 	}
 
 

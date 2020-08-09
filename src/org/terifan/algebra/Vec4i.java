@@ -124,4 +124,14 @@ public class Vec4i
 //	{
 //		return Array.of(x, y, z, w);
 //	}
+
+
+	public int getComponent(int aIndex)
+	{
+		if (aIndex == 0) return x;
+		if (aIndex == 1) return y;
+		if (aIndex == 2) return z;
+		if (aIndex == 3) return w;
+		throw new IllegalArgumentException();
+	}
 }
