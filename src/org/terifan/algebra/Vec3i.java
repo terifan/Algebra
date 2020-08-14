@@ -8,6 +8,11 @@ public class Vec3i
 	public int z;
 
 
+	public Vec3i()
+	{
+	}
+
+
 	public Vec3i(int aX, int aY, int aZ)
 	{
 		this.x = aX;
@@ -48,4 +53,11 @@ public class Vec3i
 //	{
 //		return Array.of(x, y, z);
 //	}
+
+
+	@Override
+	public String toString()
+	{
+		return "Vec3i{" + "x=" + x + ", y=" + y + ", z=" + z + '}';
+	}
 }

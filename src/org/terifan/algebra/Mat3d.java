@@ -45,6 +45,15 @@ public class Mat3d implements Serializable
 	}
 
 
+	public Mat3d identity()
+	{
+		m[0].set(1,0,0);
+		m[1].set(0,1,0);
+		m[2].set(0,0,1);
+		return this;
+	}
+
+
 	public Mat3d transposeClone()
 	{
 		return new Mat3d(
@@ -242,7 +251,7 @@ public class Mat3d implements Serializable
 //			 + v[2].x * (v[0].y * v[1].z - v[0].z * v[1].y);
 //	}
 
-	
+
 	public Mat3d setColumn(int aColumn, double... aValues)
 	{
 		for (int i = 0; i < aValues.length; i++)
@@ -252,7 +261,7 @@ public class Mat3d implements Serializable
 
 		return this;
 	}
-	
+
 
 	@Override
 	public String toString()

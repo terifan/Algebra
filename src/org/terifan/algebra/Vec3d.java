@@ -613,7 +613,7 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 	public String toString()
 	{
 //		return ("{x=" + x + ", y=" + y + ", z=" + z + "}").replace(".0,", ",").replace(".0}", "}");
-		return String.format("{x=%7.3f, y=%7.3f, z=%7.3f}", x, y, z);
+		return String.format("{x=%8.5f, y=%8.5f, z=%8.5f}", x, y, z);
 	}
 
 
@@ -754,9 +754,9 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 	{
 		switch (aComponent)
 		{
-			case 0: x = aComponent; break;
-			case 1: y = aComponent; break;
-			case 2: z = aComponent; break;
+			case 0: x = aValue; break;
+			case 1: y = aValue; break;
+			case 2: z = aValue; break;
 			default: throw new IllegalArgumentException();
 		}
 		return this;
