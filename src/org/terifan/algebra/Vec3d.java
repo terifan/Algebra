@@ -613,7 +613,7 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 	public String toString()
 	{
 //		return ("{x=" + x + ", y=" + y + ", z=" + z + "}").replace(".0,", ",").replace(".0}", "}");
-		return String.format("{x=%8.5f, y=%8.5f, z=%8.5f}", x, y, z);
+		return String.format("{x=%8.4f, y=%8.4f, z=%8.4f}", x, y, z);
 	}
 
 
@@ -925,5 +925,22 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 		aArray.put(0, x);
 		aArray.put(1, y);
 		aArray.put(2, z);
+	}
+
+
+	/**
+	 * Multiplies aVector with aFactor and adds result to this instance.
+	 *
+	 * @param aVector
+	 * @param aFactor
+	 * @return
+	 */
+	public Vec3d addmod(Vec3d aVector, double aFactor)
+	{
+		x += aVector.x * aFactor;
+		y += aVector.y * aFactor;
+		z += aVector.z * aFactor;
+
+		return this;
 	}
 }
