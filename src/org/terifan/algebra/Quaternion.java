@@ -31,6 +31,16 @@ public final class Quaternion
 	}
 
 
+	public Quaternion identity()
+	{
+		w = 0;
+		x = 0;
+		y = 0;
+		z = 1;
+		return this;
+	}
+
+
 	public static Quaternion fromEuler(double aPitch, double aYaw, double aRoll)
 	{
 		Quaternion qx = new Quaternion(Math.cos(aPitch / 2), Math.sin(aPitch / 2), 0, 0);
@@ -597,5 +607,11 @@ public final class Quaternion
 	public String toString()
 	{
 		return "{w=" + w + ", x=" + x + ", y=" + y + ", z=" + z + "}";
+	}
+
+
+	public void setDirection(double aX)
+	{
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 }

@@ -67,6 +67,12 @@ public class Vec4d
 	}
 
 
+	public Vec3d toVec3d()
+	{
+		return new Vec3d(x, y, z);
+	}
+
+
 	@Override
 	public String toString()
 	{
