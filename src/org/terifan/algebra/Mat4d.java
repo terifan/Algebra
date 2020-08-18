@@ -245,6 +245,16 @@ public class Mat4d implements Cloneable
 	}
 
 
+	public Mat4d setTranslation(Vec3d v)
+	{
+		identity();
+		m03 = v.x;
+		m13 = v.y;
+		m23 = v.z;
+		return this;
+	}
+
+
 	public Mat4d setRotationX(double angle)
 	{
 		identity();
