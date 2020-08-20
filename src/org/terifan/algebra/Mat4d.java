@@ -56,46 +56,18 @@ public class Mat4d implements Cloneable
 	}
 
 
-	public Vec3d transformPoint(Vec3d aVec)
+	public Vec3d transformPoint(Vec3d v)
 	{
-		double w = m33;
+		Vec3d result = new Vec3d();
 
-		w += m30 * aVec.x;
-		w += m31 * aVec.y;
-		w += m32 * aVec.z;
+		result.x = m00 * v.x + m10 * v.y + m20 * v.z + m30;
+		result.y = m01 * v.x + m11 * v.y + m21 * v.z + m31;
+		result.z = m02 * v.x + m12 * v.y + m22 * v.z + m32;
 
-		if (w == 0)
-		{
-			throw new Error("div 0");
-		}
-
-		double invW = 1.0 / w;
-
-		Vec3d res = new Vec3d();
-		res.x = (m03 + aVec.x * m00 + aVec.y * m01 + aVec.z * m02) * invW;
-		res.y = (m13 + aVec.x * m00 + aVec.y * m01 + aVec.z * m02) * invW;
-		res.z = (m23 + aVec.x * m00 + aVec.y * m01 + aVec.z * m02) * invW;
-
-		return res;
+		return result;
 	}
 
 
-//	public static Mat4d multiply(Mat4d left, Mat4d right)
-//	{
-//		Mat4d res = new Mat4d();
-//		for (int row = 0; row < 4; row++)
-//		{
-//			for (int col = 0; col < 4; col++)
-//			{
-//				for (int i = 0; i < 4; i++)
-//				{
-//					res.set(row, col, res.get(row, col) + left.get(row, i) * right.get(i, col));
-//				}
-//			}
-//		}
-//
-//		return res;
-//	}
 	public static Mat4d inverse(Mat4d m)
 	{
 		Mat4d temp = new Mat4d();

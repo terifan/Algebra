@@ -370,13 +370,13 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 	 */
 	public Vec3d interpolate(Vec3d aVectorFrom, Vec3d aVectorTo, double aAlpha)
 	{
-		if (aAlpha == 0)
+		if (aAlpha <= 0)
 		{
 			x = aVectorFrom.x;
 			y = aVectorFrom.y;
 			z = aVectorFrom.z;
 		}
-		else if (aAlpha == 1)
+		else if (aAlpha >= 1)
 		{
 			x = aVectorTo.x;
 			y = aVectorTo.y;
@@ -401,12 +401,7 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 	 */
 	public Vec3d interpolate(Vec3d aVector, double aAlpha)
 	{
-		if (aAlpha < 0 || aAlpha > 1)
-		{
-			throw new IllegalArgumentException("Alpha " + aAlpha);
-		}
-
-		if (aAlpha == 1)
+		if (aAlpha >= 1)
 		{
 			x = aVector.x;
 			y = aVector.y;
@@ -602,6 +597,8 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 	public Vec3d clone()
 	{
 		assert !Double.isNaN(x);
+		assert !Double.isNaN(y);
+		assert !Double.isNaN(z);
 		return new Vec3d(x,y,z);
 	}
 

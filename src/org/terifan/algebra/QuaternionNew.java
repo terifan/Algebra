@@ -46,6 +46,50 @@ public class QuaternionNew
 	}
 
 
+	public QuaternionNew(Mat4d aMat)
+	{
+		if (aMat.m22 < 0)
+		{
+			if (aMat.m00 > aMat.m11)
+			{
+				x = 1 + aMat.m00 - aMat.m11 - aMat.m22;
+				y = aMat.m01 + aMat.m10;
+				z = aMat.m20 + aMat.m02;
+				w = aMat.m12 - aMat.m21;
+			}
+			else
+			{
+				x = aMat.m01 + aMat.m10;
+				y = 1 - aMat.m00 + aMat.m11 - aMat.m22;
+				z = aMat.m12 + aMat.m21;
+				w = aMat.m20 - aMat.m02;
+			}
+		}
+		else
+		{
+			if (aMat.m00 < -aMat.m11)
+			{
+				x = aMat.m20 + aMat.m02;
+				y = aMat.m12 + aMat.m21;
+				z = 1 - aMat.m00 - aMat.m11 + aMat.m22;
+				w = aMat.m01 - aMat.m10;
+			}
+			else
+			{
+				x = aMat.m12 - aMat.m21;
+				y = aMat.m20 - aMat.m02;
+				z = aMat.m01 - aMat.m10;
+				w = 1 + aMat.m00 + aMat.m11 + aMat.m22;
+			}
+		}
+
+		double s = 0.5 / Math.sqrt(w);
+		x *= s;
+		y *= s;
+		z *= s;
+	}
+
+
 	/**
 	 * Transforms a single Vector.
 	 *
@@ -251,7 +295,14 @@ public class QuaternionNew
 		return result;
 	}
 
-	
+
+	public Vec3d rotate(Vec3d v)
+    {
+		v.add(new Vec3d(x,y,z).scale(2).cross(new Vec3d(x,y,z).cross(v).add(v.clone().scale(w))));
+		return v;
+    }
+
+
 	@Override
 	public String toString()
 	{
