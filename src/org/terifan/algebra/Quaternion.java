@@ -500,7 +500,7 @@ public final class Quaternion
 	// https://github.com/xamarin/Urho3D/blob/master/Source/Urho3D/Math/Quaternion.cpp
 	public static Quaternion fromAxes(Vec3d xAxis, Vec3d yAxis, Vec3d zAxis)
 	{
-		Mat3d matrix = new Mat3d(
+		Mat3d matrix = new Mat3d().set(
 			xAxis.x, yAxis.x, zAxis.x,
 			xAxis.y, yAxis.y, zAxis.y,
 			xAxis.z, yAxis.z, zAxis.z
@@ -515,45 +515,45 @@ public final class Quaternion
 	{
 		Quaternion q = new Quaternion();
 
-		double t = matrix.m[0].x + matrix.m[1].y + matrix.m[2].z;
+		double t = matrix.m00 + matrix.m11 + matrix.m22;
 
-		if (t > 0.0f)
+		if (t > 0.0)
 		{
-			double invS = 0.5f / Math.sqrt(1.0f + t);
+			double invS = 0.5 / Math.sqrt(1.0 + t);
 
-			q.x = (matrix.m[2].y - matrix.m[1].z) * invS;
-			q.y = (matrix.m[0].z - matrix.m[2].x) * invS;
-			q.z = (matrix.m[1].x - matrix.m[0].y) * invS;
-			q.w = 0.25f / invS;
+			q.x = (matrix.m21 - matrix.m12) * invS;
+			q.y = (matrix.m02 - matrix.m20) * invS;
+			q.z = (matrix.m10 - matrix.m01) * invS;
+			q.w = 0.25 / invS;
 		}
 		else
 		{
-			if (matrix.m[0].x > matrix.m[1].y && matrix.m[0].x > matrix.m[2].z)
+			if (matrix.m00 > matrix.m11 && matrix.m00 > matrix.m22)
 			{
-				double invS = 0.5f / Math.sqrt(1.0f + matrix.m[0].x - matrix.m[1].y - matrix.m[2].z);
+				double invS = 0.5 / Math.sqrt(1.0 + matrix.m00 - matrix.m11 - matrix.m22);
 
-				q.x = 0.25f / invS;
-				q.y = (matrix.m[0].y + matrix.m[1].x) * invS;
-				q.z = (matrix.m[2].x + matrix.m[0].z) * invS;
-				q.w = (matrix.m[2].y - matrix.m[1].z) * invS;
+				q.x = 0.25 / invS;
+				q.y = (matrix.m01 + matrix.m10) * invS;
+				q.z = (matrix.m20 + matrix.m02) * invS;
+				q.w = (matrix.m21 - matrix.m12) * invS;
 			}
-			else if (matrix.m[1].y > matrix.m[2].z)
+			else if (matrix.m11 > matrix.m22)
 			{
-				double invS = 0.5f / Math.sqrt(1.0f + matrix.m[1].y - matrix.m[0].x - matrix.m[2].z);
+				double invS = 0.5f / Math.sqrt(1.0f + matrix.m11 - matrix.m00 - matrix.m22);
 
-				q.x = (matrix.m[0].y + matrix.m[1].x) * invS;
-				q.y = 0.25f / invS;
-				q.z = (matrix.m[1].z + matrix.m[2].y) * invS;
-				q.w = (matrix.m[0].z - matrix.m[2].x) * invS;
+				q.x = (matrix.m01 + matrix.m10) * invS;
+				q.y = 0.25 / invS;
+				q.z = (matrix.m12 + matrix.m21) * invS;
+				q.w = (matrix.m02 - matrix.m20) * invS;
 			}
 			else
 			{
-				double invS = 0.5f / Math.sqrt(1.0f + matrix.m[2].z - matrix.m[0].x - matrix.m[1].y);
+				double invS = 0.5f / Math.sqrt(1.0f + matrix.m22 - matrix.m00 - matrix.m11);
 
-				q.x = (matrix.m[0].z + matrix.m[2].x) * invS;
-				q.y = (matrix.m[1].z + matrix.m[2].y) * invS;
-				q.z = 0.25f / invS;
-				q.w = (matrix.m[1].x - matrix.m[0].y) * invS;
+				q.x = (matrix.m02 + matrix.m20) * invS;
+				q.y = (matrix.m12 + matrix.m21) * invS;
+				q.z = 0.25 / invS;
+				q.w = (matrix.m10 - matrix.m01) * invS;
 			}
 		}
 

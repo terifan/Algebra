@@ -609,7 +609,6 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 	@Override
 	public String toString()
 	{
-//		return ("{x=" + x + ", y=" + y + ", z=" + z + "}").replace(".0,", ",").replace(".0}", "}");
 		return String.format("{x=%8.4f, y=%8.4f, z=%8.4f}", x, y, z);
 	}
 
@@ -627,62 +626,23 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 
 
 	/**
-	 * Swap X, Y and Z components.
-	 *
-	 * @param aIndexX
-	 *   set X component to the value of either X (0), Y (1) or Z (2) components.
-	 * @param aIndexY
-	 *   set Y component to the value of either X (0), Y (1) or Z (2) components.
-	 * @param aIndexZ
-	 *   set Z component to the value of either X (0), Y (1) or Z (2) components.
-	 */
-	public Vec3d swapComponents(int aIndexX, int aIndexY, int aIndexZ)
-	{
-		double tx = x;
-		double ty = y;
-		double tz = z;
-
-		if (aIndexX == 1) x = ty;
-		if (aIndexX == 2) x = tz;
-
-		if (aIndexY == 0) y = tx;
-		if (aIndexY == 2) y = tz;
-
-		if (aIndexZ == 0) z = tx;
-		if (aIndexZ == 1) z = ty;
-
-		return this;
-	}
-
-
-	/**
 	 * Swap components depending on type parameter: 0 do nothing, 1 swap X/Y, 2 swap X/Z, 3 swap Y/Z.
 	 */
 	public Vec3d swapComponents(int aType)
 	{
-		double tx = x;
-		double ty = y;
-		double tz = z;
-
 		switch (aType)
 		{
 			case 0:
-				break;
+				return this;
 			case 1:
-				y = tx;
-				x = ty;
-				break;
+				return set(y, x, z);
 			case 2:
-				z = tx;
-				x = tz;
-				break;
+				return set(z, y, x);
 			case 3:
-				y = tz;
-				z = ty;
-				break;
+				return set(x, z, y);
 		}
 
-		return this;
+		throw new IllegalArgumentException();
 	}
 
 
@@ -939,5 +899,64 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 		z += aVector.z * aFactor;
 
 		return this;
+	}
+
+
+	public static Vec3d rotateAboutAxisRads(Vec3d source, double angleRads, Vec3d rotationAxis)
+	{
+		Mat3d rotationMatrix = new Mat3d();
+
+		double sinTheta         = Math.sin(angleRads);
+		double cosTheta         = Math.cos(angleRads);
+		double oneMinusCosTheta = 1.0 - cosTheta;
+
+		// It's quicker to pre-calc these and reuse than calculate x * y, then y * x later (same thing).
+		double xyOne = rotationAxis.x * rotationAxis.y * oneMinusCosTheta;
+		double xzOne = rotationAxis.x * rotationAxis.z * oneMinusCosTheta;
+		double yzOne = rotationAxis.y * rotationAxis.z * oneMinusCosTheta;
+
+		// Calculate rotated x-axis
+		rotationMatrix.m00 = rotationAxis.x * rotationAxis.x * oneMinusCosTheta + cosTheta;
+		rotationMatrix.m01 = xyOne + rotationAxis.z * sinTheta;
+		rotationMatrix.m02 = xzOne - rotationAxis.y * sinTheta;
+
+		// Calculate rotated y-axis
+		rotationMatrix.m10 = xyOne - rotationAxis.z * sinTheta;
+		rotationMatrix.m11 = rotationAxis.y * rotationAxis.y * oneMinusCosTheta + cosTheta;
+		rotationMatrix.m12 = yzOne + rotationAxis.x * sinTheta;
+
+		// Calculate rotated z-axis
+		rotationMatrix.m20 = xzOne + rotationAxis.y * sinTheta;
+		rotationMatrix.m21 = yzOne - rotationAxis.x * sinTheta;
+		rotationMatrix.m22 = rotationAxis.z * rotationAxis.z * oneMinusCosTheta + cosTheta;
+
+		// Multiply the source by the rotation matrix we just created to perform the rotation
+		return rotationMatrix.multiply(source);
+	}
+
+
+	boolean lengthIsApproximately(double value, double tolerance)
+	{
+		return Math.abs(this.length() - value) < tolerance;
+	}
+
+
+	public Vec3d multiply(Mat3d m)
+	{
+		return set(
+			m.m00 * x + m.m10 * y + m.m20 * z,
+			m.m01 * x + m.m11 * y + m.m21 * z,
+			m.m02 * x + m.m12 * y + m.m22 * z
+		);
+	}
+
+
+	public Vec3d multiply(Mat4d m)
+	{
+		return set(
+			m.m00 * x + m.m10 * y + m.m20 * z,
+			m.m01 * x + m.m11 * y + m.m21 * z,
+			m.m02 * x + m.m12 * y + m.m22 * z
+		);
 	}
 }

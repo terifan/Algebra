@@ -73,10 +73,13 @@ public class Vec4d
 	}
 
 
+	/**
+	 * Returns a description of this object.
+	 */
 	@Override
 	public String toString()
 	{
-		return "{" + "x=" + x + ", y=" + y + ", z=" + z + ", w=" + w + '}';
+		return String.format("{x=%8.4f, y=%8.4f, z=%8.4f, w=%8.4f}", x, y, z, w);
 	}
 
 

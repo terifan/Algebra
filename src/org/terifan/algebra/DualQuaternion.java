@@ -9,8 +9,8 @@ package org.terifan.algebra;
  */
 public class DualQuaternion implements Cloneable
 {
-	private QuaternionNew qblend_0;
-	private QuaternionNew qblend_e;
+	private QuaternionNew m_real;
+	private QuaternionNew m_dual;
 
 
 	public DualQuaternion()
@@ -21,15 +21,15 @@ public class DualQuaternion implements Cloneable
 
 	public DualQuaternion(QuaternionNew aReal, QuaternionNew aDual)
 	{
-		qblend_0 = aReal;
-		qblend_e = aDual;
+		m_real = aReal;
+		m_dual = aDual;
 	}
 
 
 	public DualQuaternion(QuaternionNew aQuaternion, Vec3d aTrans)
 	{
-		qblend_0 = aQuaternion.clone().normalize();
-		qblend_e = new QuaternionNew(0, aTrans.x, aTrans.y, aTrans.z).multiply(qblend_0).multiply(0.5);
+		m_real = aQuaternion.clone().normalize();
+		m_dual = new QuaternionNew(aTrans.x, aTrans.y, aTrans.z, 0).multiply(m_real).multiply(0.5);
 	}
 
 
@@ -38,17 +38,18 @@ public class DualQuaternion implements Cloneable
 	 */
 	public Vec3d transform(Vec3d p)
 	{
-		Vec3d v0 = qblend_0.getVectorPart();
-		Vec3d ve = qblend_e.getVectorPart();
-		Vec3d trans = ve.clone().scale(qblend_0.w).subtract(v0.clone().scale(qblend_e.w)).add(v0.clone().cross(ve)).scale(2); // (ve*qblend_0.w() - v0*qblend_e.w() + v0.cross(ve)) * 2.f;
+		Vec3d v0 = m_real.getVectorPart();
+		Vec3d ve = m_dual.getVectorPart();
 
-		return qblend_0.rotate(p).add(trans);
+		Vec3d trans = ve.clone().scale(m_real.w).subtract(v0.clone().scale(m_dual.w)).add(v0.clone().cross(ve)).scale(2);
+
+		return m_real.rotate(p).add(trans);
 	}
 
 
 	public Vec3d rotate(Vec3d v)
     {
-        QuaternionNew tmp = qblend_0;
+        QuaternionNew tmp = m_real;
         tmp.normalize();
         return tmp.rotate(v);
     }
@@ -56,19 +57,19 @@ public class DualQuaternion implements Cloneable
 
 	public DualQuaternion conjugate()
 	{
-		qblend_0.conjugate();
-		qblend_e.conjugate();
+		m_real.conjugate();
+		m_dual.conjugate();
 		return this;
 	}
 
 
 	public DualQuaternion multiply(DualQuaternion dq)
 	{
-		QuaternionNew _q0 = dq.qblend_0.clone().multiply(qblend_0);
-		QuaternionNew _qe = dq.qblend_e.clone().multiply(qblend_0).add(dq.qblend_0.clone().multiply(qblend_e));
+		QuaternionNew _q0 = dq.m_real.clone().multiply(m_real);
+		QuaternionNew _qe = dq.m_dual.clone().multiply(m_real).add(dq.m_real.clone().multiply(m_dual));
 
-		qblend_0 = _q0;
-		qblend_e = _qe;
+		m_real = _q0;
+		m_dual = _qe;
 
 		return this;
 	}
@@ -76,25 +77,25 @@ public class DualQuaternion implements Cloneable
 
 	public DualQuaternion multiply(double aScalar)
 	{
-		qblend_0.multiply(aScalar);
-		qblend_e.multiply(aScalar);
+		m_real.multiply(aScalar);
+		m_dual.multiply(aScalar);
 		return this;
 	}
 
 
 	public DualQuaternion add(DualQuaternion dq)
 	{
-		qblend_0.add(dq.qblend_0);
-		qblend_e.add(dq.qblend_e);
+		m_real.add(dq.m_real);
+		m_dual.add(dq.m_dual);
 		return this;
 	}
 
 
 	public DualQuaternion normalize()
 	{
-		double scale = 1.0 / qblend_0.dot(qblend_0);
-		qblend_0.multiply(scale);
-		qblend_e.multiply(scale);
+		double scale = 1.0 / m_real.dot(m_real);
+		m_real.multiply(scale);
+		m_dual.multiply(scale);
 
 		return this;
 	}
@@ -102,8 +103,8 @@ public class DualQuaternion implements Cloneable
 
 	public DualQuaternion invert()
 	{
-		double sqr_len_0 = qblend_0.dot(qblend_0);
-		double sqr_len_e = qblend_0.dot(qblend_e) * 2.0;
+		double sqr_len_0 = m_real.dot(m_real);
+		double sqr_len_e = m_real.dot(m_dual) * 2.0;
 
 		if (sqr_len_0 > 0.0)
 		{
@@ -111,13 +112,13 @@ public class DualQuaternion implements Cloneable
 			double inv_sqr_len_e = -sqr_len_e / (sqr_len_0 * sqr_len_0);
 
 			DualQuaternion conj = clone().conjugate();
-			qblend_0 = conj.qblend_0.clone().multiply(inv_sqr_len_0);
-			qblend_e = conj.qblend_e.multiply(inv_sqr_len_0).add(conj.qblend_0.multiply(inv_sqr_len_e));
+			m_real = conj.m_real.clone().multiply(inv_sqr_len_0);
+			m_dual = conj.m_dual.multiply(inv_sqr_len_0).add(conj.m_real.multiply(inv_sqr_len_e));
 		}
 		else
 		{
-			qblend_0.multiply(0);
-			qblend_e.multiply(0);
+			m_real.multiply(0);
+			m_dual.multiply(0);
 		}
 
 		return this;
@@ -127,7 +128,7 @@ public class DualQuaternion implements Cloneable
 	@Override
 	public DualQuaternion clone()
 	{
-		return new DualQuaternion(qblend_0.clone(), qblend_e.clone());
+		return new DualQuaternion(m_real.clone(), m_dual.clone());
 	}
 
 
@@ -136,15 +137,15 @@ public class DualQuaternion implements Cloneable
 		double sin_half_angle = Math.sin(inAngle * 0.5);
 		double cos_half_angle = Math.cos(inAngle * 0.5);
 
-		qblend_0.w = cos_half_angle;
-		qblend_0.x = sin_half_angle * inDir.x;
-		qblend_0.y = sin_half_angle * inDir.y;
-		qblend_0.z = sin_half_angle * inDir.z;
+		m_real.w = cos_half_angle;
+		m_real.x = sin_half_angle * inDir.x;
+		m_real.y = sin_half_angle * inDir.y;
+		m_real.z = sin_half_angle * inDir.z;
 
-		qblend_e.w = -inPitch * sin_half_angle * 0.5;
-		qblend_e.x = sin_half_angle * inMoment.x + 0.5 * inPitch * cos_half_angle * inDir.x;
-		qblend_e.y = sin_half_angle * inMoment.y + 0.5 * inPitch * cos_half_angle * inDir.y;
-		qblend_e.z = sin_half_angle * inMoment.z + 0.5 * inPitch * cos_half_angle * inDir.z;
+		m_dual.w = -inPitch * sin_half_angle * 0.5;
+		m_dual.x = sin_half_angle * inMoment.x + 0.5 * inPitch * cos_half_angle * inDir.x;
+		m_dual.y = sin_half_angle * inMoment.y + 0.5 * inPitch * cos_half_angle * inDir.y;
+		m_dual.z = sin_half_angle * inMoment.z + 0.5 * inPitch * cos_half_angle * inDir.z;
 
 		return this;
 	}
@@ -159,21 +160,21 @@ public class DualQuaternion implements Cloneable
 	public boolean checkPlucker()
 	{
 		// Test for Plücker condition. Dot between real and dual part must be 0
-		return Math.abs(dotQuat(qblend_0, qblend_e)) < 1e-5;
+		return Math.abs(dotQuat(m_real, m_dual)) < 1e-5;
 	}
 
 
 	public boolean isUnit()
 	{
-		// Real must be unit and plucker condition must hold
-		return Math.abs(dotQuat(qblend_0, qblend_0) - 1.0) < 1e-5 && checkPlucker();
+		// Real must be unit and Plücker condition must hold
+		return Math.abs(dotQuat(m_real, m_real) - 1.0) < 1e-5 && checkPlucker();
 	}
 
 
 	public boolean hasRotation()
 	{
 		assert isUnit();
-		return Math.abs(qblend_0.w) < 0.999999;
+		return Math.abs(m_real.w) < 0.999999;
 	}
 
 
@@ -189,9 +190,9 @@ public class DualQuaternion implements Cloneable
 		if (isPureTranslation())
 		{
 			outAngle[0] = 0.0;
-			outDir.x = qblend_e.x;
-			outDir.y = qblend_e.y;
-			outDir.z = qblend_e.z;
+			outDir.x = m_dual.x;
+			outDir.y = m_dual.y;
+			outDir.z = m_dual.z;
 
 			double dir_sq_len = outDir.x * outDir.x + outDir.y * outDir.y + outDir.z * outDir.z;
 
@@ -214,9 +215,9 @@ public class DualQuaternion implements Cloneable
 		else
 		{
 			// Rigid transformation with a nonzero rotation
-			outAngle[0] = 2.0 * Math.acos(qblend_0.w);
+			outAngle[0] = 2.0 * Math.acos(m_real.w);
 
-			double s = qblend_0.x * qblend_0.x + qblend_0.y * qblend_0.y + qblend_0.z * qblend_0.z;
+			double s = m_real.x * m_real.x + m_real.y * m_real.y + m_real.z * m_real.z;
 			if (s < 1e-6)
 			{
 				outDir.set(0, 0, 0);
@@ -226,17 +227,17 @@ public class DualQuaternion implements Cloneable
 			else
 			{
 				double oos = 1.0 / Math.sqrt(s);
-				outDir.x = qblend_0.x * oos;
-				outDir.y = qblend_0.y * oos;
-				outDir.z = qblend_0.z * oos;
+				outDir.x = m_real.x * oos;
+				outDir.y = m_real.y * oos;
+				outDir.z = m_real.z * oos;
 
-				outPitch[0] = -2.0 * qblend_e.w * oos;
+				outPitch[0] = -2.0 * m_dual.w * oos;
 
-				outMoment.x = qblend_e.x;
-				outMoment.y = qblend_e.y;
-				outMoment.z = qblend_e.z;
+				outMoment.x = m_dual.x;
+				outMoment.y = m_dual.y;
+				outMoment.z = m_dual.z;
 
-				outMoment.subtract(outDir.clone().scale(outPitch[0] * qblend_0.w * 0.5)).scale(oos);
+				outMoment.subtract(outDir.clone().scale(outPitch[0] * m_real.w * 0.5)).scale(oos);
 			}
 		}
 	}
@@ -252,15 +253,15 @@ public class DualQuaternion implements Cloneable
 		toScrew(angle, pitch, direction, moment);
 
 		DualQuaternion res = new DualQuaternion();
-		res.qblend_0.x = direction.x * angle[0] * 0.5;
-		res.qblend_0.y = direction.y * angle[0] * 0.5;
-		res.qblend_0.z = direction.z * angle[0] * 0.5;
-		res.qblend_0.w = 0.0;
+		res.m_real.x = direction.x * angle[0] * 0.5;
+		res.m_real.y = direction.y * angle[0] * 0.5;
+		res.m_real.z = direction.z * angle[0] * 0.5;
+		res.m_real.w = 0.0;
 
-		res.qblend_e.x = moment.x * angle[0] * 0.5 + direction.x * pitch[0] * 0.5;
-		res.qblend_e.y = moment.y * angle[0] * 0.5 + direction.y * pitch[0] * 0.5;
-		res.qblend_e.z = moment.z * angle[0] * 0.5 + direction.z * pitch[0] * 0.5;
-		res.qblend_e.w = 0.0;
+		res.m_dual.x = moment.x * angle[0] * 0.5 + direction.x * pitch[0] * 0.5;
+		res.m_dual.y = moment.y * angle[0] * 0.5 + direction.y * pitch[0] * 0.5;
+		res.m_dual.z = moment.z * angle[0] * 0.5 + direction.z * pitch[0] * 0.5;
+		res.m_dual.w = 0.0;
 
 		return res;
 	}
@@ -269,20 +270,20 @@ public class DualQuaternion implements Cloneable
 	public DualQuaternion exp()
 	{
 		DualQuaternion res = new DualQuaternion();
-		Vec3d n = new Vec3d(qblend_0.x, qblend_0.y, qblend_0.z);
+		Vec3d n = new Vec3d(m_real.x, m_real.y, m_real.z);
 
 		double half_angle = n.length();
 
 		// Pure translation?
 		if (half_angle < 1e-5)
 		{
-			return new DualQuaternion(new QuaternionNew().identity(), qblend_e.clone());
+			return new DualQuaternion(new QuaternionNew().identity(), m_dual.clone());
 		}
 
 		// Get normalized dir
 		Vec3d dir = n.clone().divide(half_angle);
 
-		Vec3d d = new Vec3d(qblend_e.x, qblend_e.y, qblend_e.z);
+		Vec3d d = new Vec3d(m_dual.x, m_dual.y, m_dual.z);
 		double half_pitch = d.dot(dir);
 		Vec3d mom = d.subtract(dir.clone().scale(half_pitch)).divide(half_angle);
 
@@ -292,13 +293,13 @@ public class DualQuaternion implements Cloneable
 
 	public double dotReal(DualQuaternion inRHS)
 	{
-		return dotQuat(qblend_0, inRHS.qblend_0);
+		return dotQuat(m_real, inRHS.m_real);
 	}
 
 
 	public double dotDual(DualQuaternion inRHS)
 	{
-		return dotQuat(qblend_e, inRHS.qblend_e);
+		return dotQuat(m_dual, inRHS.m_dual);
 	}
 
 
@@ -310,27 +311,27 @@ public class DualQuaternion implements Cloneable
 
 	public DualQuaternion negateIt()
 	{
-		qblend_0.negate();
-		qblend_e.negate();
+		m_real.negate();
+		m_dual.negate();
 		return this;
 	}
 
 
 	public QuaternionNew getReal()
 	{
-		return qblend_0;
+		return m_real;
 	}
 
 
 	public QuaternionNew getDual()
 	{
-		return qblend_e;
+		return m_dual;
 	}
 
 
 	@Override
 	public String toString()
 	{
-		return "{real=" + qblend_0 + ", dual=" + qblend_e + "}";
+		return "{real=" + m_real + ", dual=" + m_dual + "}";
 	}
 }

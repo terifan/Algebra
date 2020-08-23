@@ -1,4 +1,4 @@
-package org.terifan.algebra;
+package org.terifan.sobol;
 
 
 /* Copyright 2009-2015 David Hadka

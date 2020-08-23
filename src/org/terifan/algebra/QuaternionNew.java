@@ -6,7 +6,7 @@ package org.terifan.algebra;
  */
 public class QuaternionNew
 {
-	double w, x, y, z;
+	double x, y, z, w;
 
 
 	public QuaternionNew()
@@ -37,66 +37,71 @@ public class QuaternionNew
 	}
 
 
-	public QuaternionNew(double aW, double aX, double aY, double aZ)
+	public QuaternionNew(double aX, double aY, double aZ, double aW)
 	{
-		w = aW;
 		x = aX;
 		y = aY;
 		z = aZ;
+		w = aW;
 	}
 
 
-	public QuaternionNew(Mat4d aMat)
+	// https://github.com/xamarin/Urho3D/blob/master/Source/Urho3D/Math/Quaternion.cpp
+	public static QuaternionNew createFromRotationMatrix(Mat3d matrix)
 	{
-		if (aMat.m22 < 0)
+		QuaternionNew q = new QuaternionNew();
+
+		double t = matrix.m00 + matrix.m11 + matrix.m22;
+
+		if (t > 0.0)
 		{
-			if (aMat.m00 > aMat.m11)
-			{
-				x = 1 + aMat.m00 - aMat.m11 - aMat.m22;
-				y = aMat.m01 + aMat.m10;
-				z = aMat.m20 + aMat.m02;
-				w = aMat.m12 - aMat.m21;
-			}
-			else
-			{
-				x = aMat.m01 + aMat.m10;
-				y = 1 - aMat.m00 + aMat.m11 - aMat.m22;
-				z = aMat.m12 + aMat.m21;
-				w = aMat.m20 - aMat.m02;
-			}
+			double invS = 0.5 / Math.sqrt(1.0 + t);
+
+			q.x = (matrix.m21 - matrix.m12) * invS;
+			q.y = (matrix.m02 - matrix.m20) * invS;
+			q.z = (matrix.m10 - matrix.m01) * invS;
+			q.w = 0.25 / invS;
 		}
 		else
 		{
-			if (aMat.m00 < -aMat.m11)
+			if (matrix.m00 > matrix.m11 && matrix.m00 > matrix.m22)
 			{
-				x = aMat.m20 + aMat.m02;
-				y = aMat.m12 + aMat.m21;
-				z = 1 - aMat.m00 - aMat.m11 + aMat.m22;
-				w = aMat.m01 - aMat.m10;
+				double invS = 0.5 / Math.sqrt(1.0 + matrix.m00 - matrix.m11 - matrix.m22);
+
+				q.x = 0.25 / invS;
+				q.y = (matrix.m01 + matrix.m10) * invS;
+				q.z = (matrix.m20 + matrix.m02) * invS;
+				q.w = (matrix.m21 - matrix.m12) * invS;
+			}
+			else if (matrix.m11 > matrix.m22)
+			{
+				double invS = 0.5f / Math.sqrt(1.0f + matrix.m11 - matrix.m00 - matrix.m22);
+
+				q.x = (matrix.m01 + matrix.m10) * invS;
+				q.y = 0.25 / invS;
+				q.z = (matrix.m12 + matrix.m21) * invS;
+				q.w = (matrix.m02 - matrix.m20) * invS;
 			}
 			else
 			{
-				x = aMat.m12 - aMat.m21;
-				y = aMat.m20 - aMat.m02;
-				z = aMat.m01 - aMat.m10;
-				w = 1 + aMat.m00 + aMat.m11 + aMat.m22;
+				double invS = 0.5f / Math.sqrt(1.0f + matrix.m22 - matrix.m00 - matrix.m11);
+
+				q.x = (matrix.m02 + matrix.m20) * invS;
+				q.y = (matrix.m12 + matrix.m21) * invS;
+				q.z = 0.25 / invS;
+				q.w = (matrix.m10 - matrix.m01) * invS;
 			}
 		}
 
-		double s = 0.5 / Math.sqrt(w);
-		x *= s;
-		y *= s;
-		z *= s;
+		return q;
 	}
 
 
 	/**
 	 * Transforms a single Vector.
 	 *
-	 * @param aVector
-	 * the vector to transform
-	 * @return
-	 * the provided vector
+	 * @param aVector the vector to transform
+	 * @return the provided vector
 	 */
 	public Vec3d transform(Vec3d aVector)
 	{
@@ -184,7 +189,7 @@ public class QuaternionNew
 
 	public double dot(QuaternionNew q)
 	{
-		return w * q.w + x * q.x + y * q.y + z * q.z;
+		return x * q.x + y * q.y + z * q.z + w * q.w;
 	}
 
 
@@ -199,10 +204,10 @@ public class QuaternionNew
 	 */
 	public QuaternionNew negate()
 	{
-		w = -w;
 		x = -x;
 		y = -y;
 		z = -z;
+		w = -w;
 
 		return this;
 	}
@@ -220,10 +225,10 @@ public class QuaternionNew
 
 	public QuaternionNew identity()
 	{
-		w = 1;
 		x = 0;
 		y = 0;
 		z = 0;
+		w = 1;
 		return this;
 	}
 
@@ -239,7 +244,7 @@ public class QuaternionNew
 
 		if (Math.abs(dot - (-1.0)) < 0.000001)
 		{
-			return new QuaternionNew(up.x, up.y, up.z, Math.PI);
+			return new QuaternionNew(up.y, up.z, Math.PI, up.x);
 		}
 		if (Math.abs(dot - (1.0)) < 0.000001)
 		{
@@ -297,22 +302,21 @@ public class QuaternionNew
 
 
 	public Vec3d rotate(Vec3d v)
-    {
-		v.add(new Vec3d(x,y,z).scale(2).cross(new Vec3d(x,y,z).cross(v).add(v.clone().scale(w))));
-		return v;
-    }
+	{
+		return v.add(new Vec3d(x, y, z).scale(2).cross(new Vec3d(x, y, z).cross(v).add(v.clone().scale(w))));
+	}
 
 
 	@Override
 	public String toString()
 	{
-		return "{w=" + w + ", x=" + x + ", y=" + y + ", z=" + z + "}";
+		return "{x=" + x + ", y=" + y + ", z=" + z + ", w=" + w + "}";
 	}
 
 
 	@Override
 	public QuaternionNew clone()
 	{
-		return new QuaternionNew(w, x, y, z);
+		return new QuaternionNew(x, y, z, w);
 	}
 }

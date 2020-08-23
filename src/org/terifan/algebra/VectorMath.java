@@ -2,7 +2,7 @@ package org.terifan.algebra;
 
 import java.util.Random;
 
-public class VectorMath 
+public class VectorMath
 {
 	public static Vec3d getPerpendicularPointAlongAxis(Vec3d aStartPosition, Vec3d aEndPosition, double aAxisAlpha, double aAngleAlpha, double aRadius)
 	{
@@ -20,7 +20,7 @@ public class VectorMath
 	public static Vec3d importanceSampleUpperHemisphere(Random aRandom, Vec3d aLightNormal, double n)
 	{
 		return importanceSampleUpperHemisphere(aRandom.nextDouble(), aRandom.nextDouble(), aRandom.nextDouble(), aRandom.nextDouble(), aRandom.nextDouble(), aLightNormal, n);
-		
+
 //		double z = aRandom.nextDouble();
 //		double phi = aRandom.nextDouble() * 2 * Math.PI;
 //		double theta = (n == 1 ? Math.acos(Math.sqrt(z)) : Math.acos(Math.pow(z, 1 / (n + 1))));
@@ -54,7 +54,7 @@ public class VectorMath
 		Vec3d v = aLightNormal.clone().cross(u);
 		Mat3d rot = new Mat3d(u, v, aLightNormal.clone());
 
-		return rot.transpose().scale(sample);
+		return rot.transpose().multiply(sample);
 	}
 
 
