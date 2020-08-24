@@ -1158,8 +1158,8 @@ public class Mat4d implements Cloneable, Serializable
 		double c = Math.cos(angle);
 		return set(
 			1, 0, 0, 0,
-			0, c, -s, 0,
-			0, s, c, 0,
+			0, c, s, 0,
+			0, -s, c, 0,
 			0, 0, 0, 1
 		);
 	}
@@ -1170,9 +1170,9 @@ public class Mat4d implements Cloneable, Serializable
 		double s = Math.sin(angle);
 		double c = Math.cos(angle);
 		return set(
-			c, 0, s, 0,
+			c, 0, -s, 0,
 			0, 1, 0, 0,
-			-s, 0, c, 0,
+			s, 0, c, 0,
 			0, 0, 0, 1
 		);
 	}
@@ -1183,8 +1183,8 @@ public class Mat4d implements Cloneable, Serializable
 		double s = Math.sin(angle);
 		double c = Math.cos(angle);
 		return set(
-			c, -s, 0, 0,
-			s, c, 0, 0,
+			c, s, 0, 0,
+			-s, c, 0, 0,
 			0, 0, 1, 0,
 			0, 0, 0, 1
 		);
