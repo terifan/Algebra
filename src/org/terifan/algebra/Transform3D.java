@@ -182,7 +182,7 @@ public class Transform3D
 	 */
 	public Transform3D scale(Vec3d aScale)
 	{
-		mScale.scale(aScale);
+		mScale.multiply(aScale);
 		mHasScale = mScale.x != 1 || mScale.y != 1 || mScale.z != 1;
 		return this;
 	}
@@ -198,7 +198,7 @@ public class Transform3D
 	 */
 	public Transform3D scale(double aScale)
 	{
-		mScale.scale(aScale);
+		mScale.multiply(aScale);
 		mHasScale = mScale.x != 1 || mScale.y != 1 || mScale.z != 1;
 		return this;
 	}
@@ -218,7 +218,7 @@ public class Transform3D
 	 */
 	public Transform3D scale(double aScaleX, double aScaleY, double aScaleZ)
 	{
-		mScale.scale(aScaleX, aScaleY, aScaleZ);
+		mScale.multiply(aScaleX, aScaleY, aScaleZ);
 		mHasScale = mScale.x != 1 || mScale.y != 1 || mScale.z != 1;
 		return this;
 	}
@@ -529,7 +529,7 @@ public class Transform3D
 	{
 		if (mHasScale)
 		{
-			aVector.scale(mScale);
+			aVector.multiply(mScale);
 		}
 
 		if (mHasDirection)
@@ -555,7 +555,7 @@ public class Transform3D
 		{
 			for (int i = aCoordinateCount; --i >= 0;)
 			{
-				aVertices[i].scale(mScale);
+				aVertices[i].multiply(mScale);
 			}
 		}
 

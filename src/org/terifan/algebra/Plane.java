@@ -291,7 +291,7 @@ public class Plane implements Cloneable
 
 	public Vec3d closestPointOnPlane(Vec3d aVector)
 	{
-		return aVector.clone().subtract(getNormal().scale(intersectRayPlane(aVector, getNormal().clone().scale(-1))));
+		return aVector.clone().subtract(getNormal().multiply(intersectRayPlane(aVector, getNormal().clone().multiply(-1))));
 	}
 
 

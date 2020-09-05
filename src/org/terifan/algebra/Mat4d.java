@@ -565,6 +565,17 @@ public class Mat4d implements Cloneable, Serializable
 	}
 
 
+	public Mat4d transposeYZ()
+	{
+		return set(
+			m02, m01, m00, m03,
+			m22, m21, m20, m23,
+			m12, m11, m10, m13,
+			m30, m31, m32, m33
+		);
+	}
+
+
 	/**
 	 * Multiplies this Mat4d by another Mat4d.
 	 *
@@ -612,6 +623,22 @@ public class Mat4d implements Cloneable, Serializable
 
 
 	/**
+	 * Transform the provided point in 3D space.
+	 *
+	 * @return the provided Vec3d.
+	 */
+	public Vec4d transformPoint(Vec4d v)
+	{
+		v.x = m00 * v.x + m10 * v.y + m20 * v.z + m30;
+		v.y = m01 * v.x + m11 * v.y + m21 * v.z + m31;
+		v.z = m02 * v.x + m12 * v.y + m22 * v.z + m32;
+		v.w = m03 * v.x + m13 * v.y + m23 * v.z + m33;
+
+		return v;
+	}
+
+
+	/**
 	 * Transform a direction in 3D space taking into account the orientation of this Mat4ds x/y/z axes.
 	 *
 	 * @return a new Vec3d with the transformed result.
@@ -625,6 +652,72 @@ public class Mat4d implements Cloneable, Serializable
 		result.z = m02 * v.x + m12 * v.y + m22 * v.z;
 
 		return result;
+	}
+
+
+	/**
+	 * Calculate and return the inverse of a Mat4d.
+	 * <p>
+	 * Only matrices which do not have a {@link #determinant()} of zero can be inverted. If the determinant of the provided matrix is zero
+	 * then an IllegalArgumentException is thrown.
+	 *
+	 * @param	m	The matrix to invert.
+	 * @return	The inverted matrix.
+	 */
+	public Mat4d inverse()
+	{
+		Mat4d d = new Mat4d();
+
+		d.m00 = m12 * m23 * m31 - m13 * m22 * m31 + m13 * m21 * m32 - m11 * m23 * m32 - m12 * m21 * m33 + m11 * m22 * m33;
+		d.m01 = m03 * m22 * m31 - m02 * m23 * m31 - m03 * m21 * m32 + m01 * m23 * m32 + m02 * m21 * m33 - m01 * m22 * m33;
+		d.m02 = m02 * m13 * m31 - m03 * m12 * m31 + m03 * m11 * m32 - m01 * m13 * m32 - m02 * m11 * m33 + m01 * m12 * m33;
+		d.m03 = m03 * m12 * m21 - m02 * m13 * m21 - m03 * m11 * m22 + m01 * m13 * m22 + m02 * m11 * m23 - m01 * m12 * m23;
+		d.m10 = m13 * m22 * m30 - m12 * m23 * m30 - m13 * m20 * m32 + m10 * m23 * m32 + m12 * m20 * m33 - m10 * m22 * m33;
+		d.m11 = m02 * m23 * m30 - m03 * m22 * m30 + m03 * m20 * m32 - m00 * m23 * m32 - m02 * m20 * m33 + m00 * m22 * m33;
+		d.m12 = m03 * m12 * m30 - m02 * m13 * m30 - m03 * m10 * m32 + m00 * m13 * m32 + m02 * m10 * m33 - m00 * m12 * m33;
+		d.m13 = m02 * m13 * m20 - m03 * m12 * m20 + m03 * m10 * m22 - m00 * m13 * m22 - m02 * m10 * m23 + m00 * m12 * m23;
+		d.m20 = m11 * m23 * m30 - m13 * m21 * m30 + m13 * m20 * m31 - m10 * m23 * m31 - m11 * m20 * m33 + m10 * m21 * m33;
+		d.m21 = m03 * m21 * m30 - m01 * m23 * m30 - m03 * m20 * m31 + m00 * m23 * m31 + m01 * m20 * m33 - m00 * m21 * m33;
+		d.m22 = m01 * m13 * m30 - m03 * m11 * m30 + m03 * m10 * m31 - m00 * m13 * m31 - m01 * m10 * m33 + m00 * m11 * m33;
+		d.m23 = m03 * m11 * m20 - m01 * m13 * m20 - m03 * m10 * m21 + m00 * m13 * m21 + m01 * m10 * m23 - m00 * m11 * m23;
+		d.m30 = m12 * m21 * m30 - m11 * m22 * m30 - m12 * m20 * m31 + m10 * m22 * m31 + m11 * m20 * m32 - m10 * m21 * m32;
+		d.m31 = m01 * m22 * m30 - m02 * m21 * m30 + m02 * m20 * m31 - m00 * m22 * m31 - m01 * m20 * m32 + m00 * m21 * m32;
+		d.m32 = m02 * m11 * m30 - m01 * m12 * m30 - m02 * m10 * m31 + m00 * m12 * m31 + m01 * m10 * m32 - m00 * m11 * m32;
+		d.m33 = m01 * m12 * m20 - m02 * m11 * m20 + m02 * m10 * m21 - m00 * m12 * m21 - m01 * m10 * m22 + m00 * m11 * m22;
+
+		// Get the determinant of this matrix
+		double determinant = d.determinant();
+
+		// Each property of the inverse matrix is multiplied by 1.0 divided by the determinant.
+		// As we cannot divide by zero, we will throw an IllegalArgumentException if the determinant is zero.
+		if (determinant == 0)
+		{
+			throw new IllegalArgumentException("Cannot invert a matrix with a determinant of zero.");
+		}
+
+		// Otherwise, calculate the value of one over the determinant and scale the matrix by that value
+		double oneOverDeterminant = 1.0 / d.determinant();
+
+		d.m00 *= oneOverDeterminant;
+		d.m01 *= oneOverDeterminant;
+		d.m02 *= oneOverDeterminant;
+		d.m03 *= oneOverDeterminant;
+		d.m10 *= oneOverDeterminant;
+		d.m11 *= oneOverDeterminant;
+		d.m12 *= oneOverDeterminant;
+		d.m13 *= oneOverDeterminant;
+		d.m20 *= oneOverDeterminant;
+		d.m21 *= oneOverDeterminant;
+		d.m22 *= oneOverDeterminant;
+		d.m23 *= oneOverDeterminant;
+		d.m30 *= oneOverDeterminant;
+		d.m31 *= oneOverDeterminant;
+		d.m32 *= oneOverDeterminant;
+		d.m33 *= oneOverDeterminant;
+
+		set(d);
+
+		return this;
 	}
 
 
