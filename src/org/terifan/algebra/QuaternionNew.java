@@ -164,6 +164,17 @@ public class QuaternionNew
 	}
 
 
+	public QuaternionNew subtract(QuaternionNew q)
+	{
+		w -= q.w;
+		x -= q.x;
+		y -= q.y;
+		z -= q.z;
+
+		return this;
+	}
+
+
 	public QuaternionNew div(double aScalar)
 	{
 		w /= aScalar;
@@ -230,6 +241,23 @@ public class QuaternionNew
 		z = 0;
 		w = 1;
 		return this;
+	}
+
+
+	public QuaternionNew log()
+	{
+		double exp_w = Math.sqrt(dot(this));
+		double w = Math.log(exp_w);
+		double a = Math.acos(w / exp_w);
+
+		if (Math.abs(a) < 0.00001)
+		{
+			return new QuaternionNew(0, 0, 0, w);
+		}
+
+		double mag = 1 / exp_w / Math.sin(a); // sinc???
+
+		return new QuaternionNew(x * mag, y * mag, z * mag, w);
 	}
 
 

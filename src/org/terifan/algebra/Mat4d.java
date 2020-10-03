@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 
 /**
- * Column-major order matrix.
- *
+ * Column-major order matrix, properties are publicly available as: <code>m&lt;row&gt;&lt;column&gt;</code>.
+ * <p/>
  * The origin is stored in the matrix properties m30 (x location), m31 (y location) and m32 (z location).
  */
 public class Mat4d implements Cloneable, Serializable
@@ -15,10 +15,10 @@ public class Mat4d implements Cloneable, Serializable
 	private final static double DEGS_TO_RADS = Math.PI / 180.0;
 	private final static double DOUBLE_EQUALITY_TOLERANCE = 0.0000001;
 
-	public double m00, m01, m02, m03; // First  column - x-axis
-	public double m10, m11, m12, m13; // Second column - y-axis
-	public double m20, m21, m22, m23; // Third  column - z-axis
-	public double m30, m31, m32, m33; // Fourth column - origin
+	public double m00, m01, m02, m03; // First  row - x-axis
+	public double m10, m11, m12, m13; // Second row - y-axis
+	public double m20, m21, m22, m23; // Third  row - z-axis
+	public double m30, m31, m32, m33; // Fourth row - origin
 
 
 	public Mat4d()
@@ -495,6 +495,40 @@ public class Mat4d implements Cloneable, Serializable
 		m30 = x;
 		m31 = y;
 		m32 = z;
+		return this;
+	}
+
+
+	/**
+	 * Initializes this matrix with identity and an origin.
+	 *
+	 * @return this matrix.
+	 */
+	public Mat4d makeOrigin(double x, double y, double z)
+	{
+		set(
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			x, y, z, 1
+		);
+		return this;
+	}
+
+
+	/**
+	 * Initializes this matrix with identity and an origin.
+	 *
+	 * @return this matrix.
+	 */
+	public Mat4d makeOrigin(Vec3d v)
+	{
+		set(
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			v.x, v.y, v.z, 1
+		);
 		return this;
 	}
 

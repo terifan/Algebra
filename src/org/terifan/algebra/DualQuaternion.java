@@ -96,12 +96,16 @@ public class DualQuaternion implements Cloneable
 		return this;
 	}
 
-
+// https://github.com/Arnatious/DualQuats/blob/master/Assets/Scripts/DualQuaternion.cs
 	public DualQuaternion normalize()
 	{
-		double scale = 1.0 / m_real.dot(m_real);
+		double length = m_real.dot(m_real);
+		double scale = 1.0 / length;
+
 		m_real.multiply(scale);
 		m_dual.multiply(scale);
+
+		m_dual.subtract(m_real.clone().multiply(m_real.dot(m_dual) * (length * length)));
 
 		return this;
 	}
@@ -251,23 +255,30 @@ public class DualQuaternion implements Cloneable
 
 	public DualQuaternion log()
 	{
-		double[] angle = new double[1];
-		double[] pitch = new double[1];
-		Vec3d direction = new Vec3d();
-		Vec3d moment = new Vec3d();
-
-		toScrew(angle, pitch, direction, moment);
+//		double[] angle = new double[1];
+//		double[] pitch = new double[1];
+//		Vec3d direction = new Vec3d();
+//		Vec3d moment = new Vec3d();
+//
+//		toScrew(angle, pitch, direction, moment);
+//
+//		DualQuaternion res = new DualQuaternion();
+//		res.m_real.x = direction.x * angle[0] * 0.5;
+//		res.m_real.y = direction.y * angle[0] * 0.5;
+//		res.m_real.z = direction.z * angle[0] * 0.5;
+//		res.m_real.w = 0.0;
+//
+//		res.m_dual.x = moment.x * angle[0] * 0.5 + direction.x * pitch[0] * 0.5;
+//		res.m_dual.y = moment.y * angle[0] * 0.5 + direction.y * pitch[0] * 0.5;
+//		res.m_dual.z = moment.z * angle[0] * 0.5 + direction.z * pitch[0] * 0.5;
+//		res.m_dual.w = 0.0;
 
 		DualQuaternion res = new DualQuaternion();
-		res.m_real.x = direction.x * angle[0] * 0.5;
-		res.m_real.y = direction.y * angle[0] * 0.5;
-		res.m_real.z = direction.z * angle[0] * 0.5;
-		res.m_real.w = 0.0;
 
-		res.m_dual.x = moment.x * angle[0] * 0.5 + direction.x * pitch[0] * 0.5;
-		res.m_dual.y = moment.y * angle[0] * 0.5 + direction.y * pitch[0] * 0.5;
-		res.m_dual.z = moment.z * angle[0] * 0.5 + direction.z * pitch[0] * 0.5;
-		res.m_dual.w = 0.0;
+		double scale = 1 / Math.sqrt(m_real.dot(m_real));
+		scale *= scale;
+		res.m_real = m_real.clone().log();
+		res.m_dual = m_real.clone().conjugate().multiply(m_dual).multiply(scale);
 
 		return res;
 	}
