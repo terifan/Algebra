@@ -959,4 +959,10 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 			m.m02 * x + m.m12 * y + m.m22 * z
 		);
 	}
+
+
+	public Vec3i toVec3i()
+	{
+		return new Vec3i((int)x, (int)y, (int)z);
+	}
 }

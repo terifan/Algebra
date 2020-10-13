@@ -21,6 +21,66 @@ public class Vec3i
 	}
 
 
+	public Vec3i add(Vec3i aVector)
+	{
+		x += aVector.x;
+		y += aVector.y;
+		z += aVector.z;
+
+		return this;
+	}
+
+
+	public Vec3i add(int x, int y, int z)
+	{
+		this.x += x;
+		this.y += y;
+		this.z += z;
+
+		return this;
+	}
+
+
+	public Vec3i add(int aValue)
+	{
+		this.x += aValue;
+		this.y += aValue;
+		this.z += aValue;
+
+		return this;
+	}
+
+
+	public Vec3i subtract(Vec3i aVector)
+	{
+		x -= aVector.x;
+		y -= aVector.y;
+		z -= aVector.z;
+
+		return this;
+	}
+
+
+	public Vec3i subtract(int x, int y, int z)
+	{
+		this.x -= x;
+		this.y -= y;
+		this.z -= z;
+
+		return this;
+	}
+
+
+	public Vec3i subtract(int aValue)
+	{
+		this.x -= aValue;
+		this.y -= aValue;
+		this.z -= aValue;
+
+		return this;
+	}
+
+
 //	@Override
 //	public void readExternal(Bundle aBundle)
 //	{
