@@ -690,7 +690,7 @@ public class Mat4d implements Cloneable, Serializable
 
 
 	/**
-	 * Calculate and return the inverse of a Mat4d.
+	 * Return an inverse copy of this Mat4d.
 	 * <p>
 	 * Only matrices which do not have a {@link #determinant()} of zero can be inverted. If the determinant of the provided matrix is zero
 	 * then an IllegalArgumentException is thrown.
@@ -698,7 +698,7 @@ public class Mat4d implements Cloneable, Serializable
 	 * @param	m	The matrix to invert.
 	 * @return	The inverted matrix.
 	 */
-	public Mat4d inverse()
+	public Mat4d makeInverse()
 	{
 		Mat4d d = new Mat4d();
 
