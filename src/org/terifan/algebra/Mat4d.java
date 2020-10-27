@@ -689,74 +689,31 @@ public class Mat4d implements Cloneable, Serializable
 	}
 
 
-	/**
-	 * Return an inverse copy of this Mat4d.
-	 * <p>
-	 * Only matrices which do not have a {@link #determinant()} of zero can be inverted. If the determinant of the provided matrix is zero
-	 * then an IllegalArgumentException is thrown.
-	 *
-	 * @param	m	The matrix to invert.
-	 * @return	The inverted matrix.
-	 */
-	public Mat4d makeInverse()
+	public Mat4d scale(double aScale)
 	{
-		Mat4d d = new Mat4d();
-
-		d.m00 = m12 * m23 * m31 - m13 * m22 * m31 + m13 * m21 * m32 - m11 * m23 * m32 - m12 * m21 * m33 + m11 * m22 * m33;
-		d.m01 = m03 * m22 * m31 - m02 * m23 * m31 - m03 * m21 * m32 + m01 * m23 * m32 + m02 * m21 * m33 - m01 * m22 * m33;
-		d.m02 = m02 * m13 * m31 - m03 * m12 * m31 + m03 * m11 * m32 - m01 * m13 * m32 - m02 * m11 * m33 + m01 * m12 * m33;
-		d.m03 = m03 * m12 * m21 - m02 * m13 * m21 - m03 * m11 * m22 + m01 * m13 * m22 + m02 * m11 * m23 - m01 * m12 * m23;
-		d.m10 = m13 * m22 * m30 - m12 * m23 * m30 - m13 * m20 * m32 + m10 * m23 * m32 + m12 * m20 * m33 - m10 * m22 * m33;
-		d.m11 = m02 * m23 * m30 - m03 * m22 * m30 + m03 * m20 * m32 - m00 * m23 * m32 - m02 * m20 * m33 + m00 * m22 * m33;
-		d.m12 = m03 * m12 * m30 - m02 * m13 * m30 - m03 * m10 * m32 + m00 * m13 * m32 + m02 * m10 * m33 - m00 * m12 * m33;
-		d.m13 = m02 * m13 * m20 - m03 * m12 * m20 + m03 * m10 * m22 - m00 * m13 * m22 - m02 * m10 * m23 + m00 * m12 * m23;
-		d.m20 = m11 * m23 * m30 - m13 * m21 * m30 + m13 * m20 * m31 - m10 * m23 * m31 - m11 * m20 * m33 + m10 * m21 * m33;
-		d.m21 = m03 * m21 * m30 - m01 * m23 * m30 - m03 * m20 * m31 + m00 * m23 * m31 + m01 * m20 * m33 - m00 * m21 * m33;
-		d.m22 = m01 * m13 * m30 - m03 * m11 * m30 + m03 * m10 * m31 - m00 * m13 * m31 - m01 * m10 * m33 + m00 * m11 * m33;
-		d.m23 = m03 * m11 * m20 - m01 * m13 * m20 - m03 * m10 * m21 + m00 * m13 * m21 + m01 * m10 * m23 - m00 * m11 * m23;
-		d.m30 = m12 * m21 * m30 - m11 * m22 * m30 - m12 * m20 * m31 + m10 * m22 * m31 + m11 * m20 * m32 - m10 * m21 * m32;
-		d.m31 = m01 * m22 * m30 - m02 * m21 * m30 + m02 * m20 * m31 - m00 * m22 * m31 - m01 * m20 * m32 + m00 * m21 * m32;
-		d.m32 = m02 * m11 * m30 - m01 * m12 * m30 - m02 * m10 * m31 + m00 * m12 * m31 + m01 * m10 * m32 - m00 * m11 * m32;
-		d.m33 = m01 * m12 * m20 - m02 * m11 * m20 + m02 * m10 * m21 - m00 * m12 * m21 - m01 * m10 * m22 + m00 * m11 * m22;
-
-		// Get the determinant of this matrix
-		double determinant = d.determinant();
-
-		// Each property of the inverse matrix is multiplied by 1.0 divided by the determinant.
-		// As we cannot divide by zero, we will throw an IllegalArgumentException if the determinant is zero.
-		if (determinant == 0)
-		{
-			throw new IllegalArgumentException("Cannot invert a matrix with a determinant of zero.");
-		}
-
-		// Otherwise, calculate the value of one over the determinant and scale the matrix by that value
-		double oneOverDeterminant = 1.0 / d.determinant();
-
-		d.m00 *= oneOverDeterminant;
-		d.m01 *= oneOverDeterminant;
-		d.m02 *= oneOverDeterminant;
-		d.m03 *= oneOverDeterminant;
-		d.m10 *= oneOverDeterminant;
-		d.m11 *= oneOverDeterminant;
-		d.m12 *= oneOverDeterminant;
-		d.m13 *= oneOverDeterminant;
-		d.m20 *= oneOverDeterminant;
-		d.m21 *= oneOverDeterminant;
-		d.m22 *= oneOverDeterminant;
-		d.m23 *= oneOverDeterminant;
-		d.m30 *= oneOverDeterminant;
-		d.m31 *= oneOverDeterminant;
-		d.m32 *= oneOverDeterminant;
-		d.m33 *= oneOverDeterminant;
-
-		set(d);
+		m00 *= aScale;
+		m01 *= aScale;
+		m02 *= aScale;
+		m03 *= aScale;
+		m10 *= aScale;
+		m11 *= aScale;
+		m12 *= aScale;
+		m13 *= aScale;
+		m20 *= aScale;
+		m21 *= aScale;
+		m22 *= aScale;
+		m23 *= aScale;
+		m30 *= aScale;
+		m31 *= aScale;
+		m32 *= aScale;
+		m33 *= aScale;
 
 		return this;
 	}
 
 
 	/**
-	 * Calculate and return the inverse of a Mat4d.
+	 * Invert this Mat4d.
 	 * <p>
 	 * Only matrices which do not have a {@link #determinant()} of zero can be inverted. If the determinant of the provided matrix is zero
 	 * then an IllegalArgumentException is thrown.
@@ -764,29 +721,29 @@ public class Mat4d implements Cloneable, Serializable
 	 * @param	m	The matrix to invert.
 	 * @return	The inverted matrix.
 	 */
-	public static Mat4d createInverse(Mat4d m)
+	public Mat4d invert()
 	{
-		Mat4d temp = new Mat4d();
+		Mat4d m = new Mat4d();
 
-		temp.m00 = m.m12 * m.m23 * m.m31 - m.m13 * m.m22 * m.m31 + m.m13 * m.m21 * m.m32 - m.m11 * m.m23 * m.m32 - m.m12 * m.m21 * m.m33 + m.m11 * m.m22 * m.m33;
-		temp.m01 = m.m03 * m.m22 * m.m31 - m.m02 * m.m23 * m.m31 - m.m03 * m.m21 * m.m32 + m.m01 * m.m23 * m.m32 + m.m02 * m.m21 * m.m33 - m.m01 * m.m22 * m.m33;
-		temp.m02 = m.m02 * m.m13 * m.m31 - m.m03 * m.m12 * m.m31 + m.m03 * m.m11 * m.m32 - m.m01 * m.m13 * m.m32 - m.m02 * m.m11 * m.m33 + m.m01 * m.m12 * m.m33;
-		temp.m03 = m.m03 * m.m12 * m.m21 - m.m02 * m.m13 * m.m21 - m.m03 * m.m11 * m.m22 + m.m01 * m.m13 * m.m22 + m.m02 * m.m11 * m.m23 - m.m01 * m.m12 * m.m23;
-		temp.m10 = m.m13 * m.m22 * m.m30 - m.m12 * m.m23 * m.m30 - m.m13 * m.m20 * m.m32 + m.m10 * m.m23 * m.m32 + m.m12 * m.m20 * m.m33 - m.m10 * m.m22 * m.m33;
-		temp.m11 = m.m02 * m.m23 * m.m30 - m.m03 * m.m22 * m.m30 + m.m03 * m.m20 * m.m32 - m.m00 * m.m23 * m.m32 - m.m02 * m.m20 * m.m33 + m.m00 * m.m22 * m.m33;
-		temp.m12 = m.m03 * m.m12 * m.m30 - m.m02 * m.m13 * m.m30 - m.m03 * m.m10 * m.m32 + m.m00 * m.m13 * m.m32 + m.m02 * m.m10 * m.m33 - m.m00 * m.m12 * m.m33;
-		temp.m13 = m.m02 * m.m13 * m.m20 - m.m03 * m.m12 * m.m20 + m.m03 * m.m10 * m.m22 - m.m00 * m.m13 * m.m22 - m.m02 * m.m10 * m.m23 + m.m00 * m.m12 * m.m23;
-		temp.m20 = m.m11 * m.m23 * m.m30 - m.m13 * m.m21 * m.m30 + m.m13 * m.m20 * m.m31 - m.m10 * m.m23 * m.m31 - m.m11 * m.m20 * m.m33 + m.m10 * m.m21 * m.m33;
-		temp.m21 = m.m03 * m.m21 * m.m30 - m.m01 * m.m23 * m.m30 - m.m03 * m.m20 * m.m31 + m.m00 * m.m23 * m.m31 + m.m01 * m.m20 * m.m33 - m.m00 * m.m21 * m.m33;
-		temp.m22 = m.m01 * m.m13 * m.m30 - m.m03 * m.m11 * m.m30 + m.m03 * m.m10 * m.m31 - m.m00 * m.m13 * m.m31 - m.m01 * m.m10 * m.m33 + m.m00 * m.m11 * m.m33;
-		temp.m23 = m.m03 * m.m11 * m.m20 - m.m01 * m.m13 * m.m20 - m.m03 * m.m10 * m.m21 + m.m00 * m.m13 * m.m21 + m.m01 * m.m10 * m.m23 - m.m00 * m.m11 * m.m23;
-		temp.m30 = m.m12 * m.m21 * m.m30 - m.m11 * m.m22 * m.m30 - m.m12 * m.m20 * m.m31 + m.m10 * m.m22 * m.m31 + m.m11 * m.m20 * m.m32 - m.m10 * m.m21 * m.m32;
-		temp.m31 = m.m01 * m.m22 * m.m30 - m.m02 * m.m21 * m.m30 + m.m02 * m.m20 * m.m31 - m.m00 * m.m22 * m.m31 - m.m01 * m.m20 * m.m32 + m.m00 * m.m21 * m.m32;
-		temp.m32 = m.m02 * m.m11 * m.m30 - m.m01 * m.m12 * m.m30 - m.m02 * m.m10 * m.m31 + m.m00 * m.m12 * m.m31 + m.m01 * m.m10 * m.m32 - m.m00 * m.m11 * m.m32;
-		temp.m33 = m.m01 * m.m12 * m.m20 - m.m02 * m.m11 * m.m20 + m.m02 * m.m10 * m.m21 - m.m00 * m.m12 * m.m21 - m.m01 * m.m10 * m.m22 + m.m00 * m.m11 * m.m22;
+		m.m00 = m12 * m23 * m31 - m13 * m22 * m31 + m13 * m21 * m32 - m11 * m23 * m32 - m12 * m21 * m33 + m11 * m22 * m33;
+		m.m01 = m03 * m22 * m31 - m02 * m23 * m31 - m03 * m21 * m32 + m01 * m23 * m32 + m02 * m21 * m33 - m01 * m22 * m33;
+		m.m02 = m02 * m13 * m31 - m03 * m12 * m31 + m03 * m11 * m32 - m01 * m13 * m32 - m02 * m11 * m33 + m01 * m12 * m33;
+		m.m03 = m03 * m12 * m21 - m02 * m13 * m21 - m03 * m11 * m22 + m01 * m13 * m22 + m02 * m11 * m23 - m01 * m12 * m23;
+		m.m10 = m13 * m22 * m30 - m12 * m23 * m30 - m13 * m20 * m32 + m10 * m23 * m32 + m12 * m20 * m33 - m10 * m22 * m33;
+		m.m11 = m02 * m23 * m30 - m03 * m22 * m30 + m03 * m20 * m32 - m00 * m23 * m32 - m02 * m20 * m33 + m00 * m22 * m33;
+		m.m12 = m03 * m12 * m30 - m02 * m13 * m30 - m03 * m10 * m32 + m00 * m13 * m32 + m02 * m10 * m33 - m00 * m12 * m33;
+		m.m13 = m02 * m13 * m20 - m03 * m12 * m20 + m03 * m10 * m22 - m00 * m13 * m22 - m02 * m10 * m23 + m00 * m12 * m23;
+		m.m20 = m11 * m23 * m30 - m13 * m21 * m30 + m13 * m20 * m31 - m10 * m23 * m31 - m11 * m20 * m33 + m10 * m21 * m33;
+		m.m21 = m03 * m21 * m30 - m01 * m23 * m30 - m03 * m20 * m31 + m00 * m23 * m31 + m01 * m20 * m33 - m00 * m21 * m33;
+		m.m22 = m01 * m13 * m30 - m03 * m11 * m30 + m03 * m10 * m31 - m00 * m13 * m31 - m01 * m10 * m33 + m00 * m11 * m33;
+		m.m23 = m03 * m11 * m20 - m01 * m13 * m20 - m03 * m10 * m21 + m00 * m13 * m21 + m01 * m10 * m23 - m00 * m11 * m23;
+		m.m30 = m12 * m21 * m30 - m11 * m22 * m30 - m12 * m20 * m31 + m10 * m22 * m31 + m11 * m20 * m32 - m10 * m21 * m32;
+		m.m31 = m01 * m22 * m30 - m02 * m21 * m30 + m02 * m20 * m31 - m00 * m22 * m31 - m01 * m20 * m32 + m00 * m21 * m32;
+		m.m32 = m02 * m11 * m30 - m01 * m12 * m30 - m02 * m10 * m31 + m00 * m12 * m31 + m01 * m10 * m32 - m00 * m11 * m32;
+		m.m33 = m01 * m12 * m20 - m02 * m11 * m20 + m02 * m10 * m21 - m00 * m12 * m21 - m01 * m10 * m22 + m00 * m11 * m22;
 
 		// Get the determinant of this matrix
-		double determinant = temp.determinant();
+		double determinant = m.determinant();
 
 		// Each property of the inverse matrix is multiplied by 1.0 divided by the determinant.
 		// As we cannot divide by zero, we will throw an IllegalArgumentException if the determinant is zero.
@@ -796,27 +753,11 @@ public class Mat4d implements Cloneable, Serializable
 		}
 
 		// Otherwise, calculate the value of one over the determinant and scale the matrix by that value
-		double oneOverDeterminant = 1.0 / temp.determinant();
+		m.scale(1.0 / determinant);
 
-		temp.m00 *= oneOverDeterminant;
-		temp.m01 *= oneOverDeterminant;
-		temp.m02 *= oneOverDeterminant;
-		temp.m03 *= oneOverDeterminant;
-		temp.m10 *= oneOverDeterminant;
-		temp.m11 *= oneOverDeterminant;
-		temp.m12 *= oneOverDeterminant;
-		temp.m13 *= oneOverDeterminant;
-		temp.m20 *= oneOverDeterminant;
-		temp.m21 *= oneOverDeterminant;
-		temp.m22 *= oneOverDeterminant;
-		temp.m23 *= oneOverDeterminant;
-		temp.m30 *= oneOverDeterminant;
-		temp.m31 *= oneOverDeterminant;
-		temp.m32 *= oneOverDeterminant;
-		temp.m33 *= oneOverDeterminant;
+		set(m);
 
-		// Finally, return the inverted matrix
-		return temp;
+		return this;
 	}
 
 
