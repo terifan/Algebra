@@ -1,7 +1,7 @@
 package org.terifan.algebra;
 
 
-public class Vec4d
+public class Vec4d implements Cloneable
 {
 	public double x;
 	public double y;
@@ -23,12 +23,41 @@ public class Vec4d
 	}
 
 
+	public Vec4d(Vec3d aV, double aW)
+	{
+		x = aV.x;
+		y = aV.y;
+		z = aV.z;
+		w = aW;
+	}
+
+
 	public Vec4d set(double aX, double aY, double aZ, double aW)
 	{
 		x = aX;
 		y = aY;
 		z = aZ;
 		w = aW;
+		return this;
+	}
+
+
+	public Vec4d multiply(double aV)
+	{
+		x *= aV;
+		y *= aV;
+		z *= aV;
+		w *= aV;
+		return this;
+	}
+
+
+	public Vec4d add(Vec4d aV)
+	{
+		x += aV.x;
+		y += aV.y;
+		z += aV.z;
+		w += aV.w;
 		return this;
 	}
 
@@ -70,6 +99,20 @@ public class Vec4d
 	public Vec3d toVec3d()
 	{
 		return new Vec3d(x, y, z);
+	}
+
+
+	@Override
+	public Vec4d clone()
+	{
+		try
+		{
+			return (Vec4d)super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			return new Vec4d(x, y, z, w);
+		}
 	}
 
 

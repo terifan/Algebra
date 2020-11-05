@@ -226,31 +226,31 @@ public class Vec3d implements Cloneable, Serializable, Bundlable
 	}
 
 
-	public Vec3d scale(double aScale)
+	public Vec3d multiply(double aFactor)
 	{
-		x *= aScale;
-		y *= aScale;
-		z *= aScale;
+		x *= aFactor;
+		y *= aFactor;
+		z *= aFactor;
 
 		return this;
 	}
 
 
-	public Vec3d scale(double aScaleX, double aScaleY, double aScaleZ)
+	public Vec3d multiply(double aFactorX, double aFactorY, double aFactorZ)
 	{
-		x *= aScaleX;
-		y *= aScaleY;
-		z *= aScaleZ;
+		x *= aFactorX;
+		y *= aFactorY;
+		z *= aFactorZ;
 
 		return this;
 	}
 
 
-	public Vec3d scale(Vec3d aVector)
+	public Vec3d multiply(Vec3d aFactor)
 	{
-		x *= aVector.x;
-		y *= aVector.y;
-		z *= aVector.z;
+		x *= aFactor.x;
+		y *= aFactor.y;
+		z *= aFactor.z;
 
 		return this;
 	}
@@ -959,5 +959,11 @@ public class Vec3d implements Cloneable, Serializable, Bundlable
 			m.m01 * x + m.m11 * y + m.m21 * z,
 			m.m02 * x + m.m12 * y + m.m22 * z
 		);
+	}
+
+
+	public Vec3i toVec3i()
+	{
+		return new Vec3i((int)x, (int)y, (int)z);
 	}
 }

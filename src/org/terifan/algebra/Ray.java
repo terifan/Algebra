@@ -233,7 +233,7 @@ public class Ray implements Cloneable
 			s1 = 0;
 		}
 
-		return aRay.mDirection.clone().scale(s1).add(aRay.mOrigin);
+		return aRay.mDirection.clone().multiply(s1).add(aRay.mOrigin);
 	}
 
 
@@ -350,7 +350,7 @@ public class Ray implements Cloneable
 			}
 		}
 
-		return mOrigin.clone().add(mDirection.clone().scale(s0));
+		return mOrigin.clone().add(mDirection.clone().multiply(s0));
 	}
 
 
@@ -401,7 +401,7 @@ public class Ray implements Cloneable
 
 	public Vec3d intersectionPoint(double t)
 	{
-		return mDirection.clone().scale(t).add(mOrigin);
+		return mDirection.clone().multiply(t).add(mOrigin);
 	}
 
 
@@ -542,7 +542,7 @@ public class Ray implements Cloneable
 		// from inside the sphere. Thus we need to negate the normal.
 		if (originToSphere.length() < aRadius.x)
 		{
-			surfaceNormal.scale(-1);
+			surfaceNormal.multiply(-1);
 		}
 
 		return surfaceNormal;

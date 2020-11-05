@@ -15,7 +15,7 @@ public class DualQuaternion implements Cloneable
 
 	public DualQuaternion()
 	{
-		this(new QuaternionNew(0.0, 0.0, 0.0, 0.0), new QuaternionNew(0.0, 0.0, 0.0, 0.0));
+		this(new QuaternionNew(), new QuaternionNew());
 	}
 
 
@@ -26,10 +26,16 @@ public class DualQuaternion implements Cloneable
 	}
 
 
-	public DualQuaternion(QuaternionNew aQuaternion, Vec3d aTrans)
+	public DualQuaternion(QuaternionNew aQuaternion, Vec3d aOrigin)
 	{
-		m_real = aQuaternion.clone().normalize();
-		m_dual = new QuaternionNew(aTrans.x, aTrans.y, aTrans.z, 0).multiply(m_real).multiply(0.5);
+		m_real = aQuaternion;
+		m_dual = new QuaternionNew(aOrigin.x, aOrigin.y, aOrigin.z, 0).multiply(0.5).multiply(m_real);
+	}
+
+
+	public DualQuaternion(Mat4d aRotTransMatrix)
+	{
+		this(QuaternionNew.createFromRotationMatrix(aRotTransMatrix.toMat3d()), aRotTransMatrix.getOrigin());
 	}
 
 
@@ -41,7 +47,7 @@ public class DualQuaternion implements Cloneable
 		Vec3d v0 = m_real.getVectorPart();
 		Vec3d ve = m_dual.getVectorPart();
 
-		Vec3d trans = ve.clone().scale(m_real.w).subtract(v0.clone().scale(m_dual.w)).add(v0.clone().cross(ve)).scale(2);
+		Vec3d trans = ve.clone().multiply(m_real.w).subtract(v0.clone().multiply(m_dual.w)).add(v0.clone().cross(ve)).multiply(2);
 
 		return m_real.rotate(p).add(trans);
 	}
@@ -90,12 +96,16 @@ public class DualQuaternion implements Cloneable
 		return this;
 	}
 
-
+// https://github.com/Arnatious/DualQuats/blob/master/Assets/Scripts/DualQuaternion.cs
 	public DualQuaternion normalize()
 	{
-		double scale = 1.0 / m_real.dot(m_real);
+		double length = m_real.dot(m_real);
+		double scale = 1.0 / length;
+
 		m_real.multiply(scale);
 		m_dual.multiply(scale);
+
+		m_dual.subtract(m_real.clone().multiply(m_real.dot(m_dual) * (length * length)));
 
 		return this;
 	}
@@ -237,7 +247,7 @@ public class DualQuaternion implements Cloneable
 				outMoment.y = m_dual.y;
 				outMoment.z = m_dual.z;
 
-				outMoment.subtract(outDir.clone().scale(outPitch[0] * m_real.w * 0.5)).scale(oos);
+				outMoment.subtract(outDir.clone().multiply(outPitch[0] * m_real.w * 0.5)).multiply(oos);
 			}
 		}
 	}
@@ -245,23 +255,30 @@ public class DualQuaternion implements Cloneable
 
 	public DualQuaternion log()
 	{
-		double[] angle = new double[1];
-		double[] pitch = new double[1];
-		Vec3d direction = new Vec3d();
-		Vec3d moment = new Vec3d();
-
-		toScrew(angle, pitch, direction, moment);
+//		double[] angle = new double[1];
+//		double[] pitch = new double[1];
+//		Vec3d direction = new Vec3d();
+//		Vec3d moment = new Vec3d();
+//
+//		toScrew(angle, pitch, direction, moment);
+//
+//		DualQuaternion res = new DualQuaternion();
+//		res.m_real.x = direction.x * angle[0] * 0.5;
+//		res.m_real.y = direction.y * angle[0] * 0.5;
+//		res.m_real.z = direction.z * angle[0] * 0.5;
+//		res.m_real.w = 0.0;
+//
+//		res.m_dual.x = moment.x * angle[0] * 0.5 + direction.x * pitch[0] * 0.5;
+//		res.m_dual.y = moment.y * angle[0] * 0.5 + direction.y * pitch[0] * 0.5;
+//		res.m_dual.z = moment.z * angle[0] * 0.5 + direction.z * pitch[0] * 0.5;
+//		res.m_dual.w = 0.0;
 
 		DualQuaternion res = new DualQuaternion();
-		res.m_real.x = direction.x * angle[0] * 0.5;
-		res.m_real.y = direction.y * angle[0] * 0.5;
-		res.m_real.z = direction.z * angle[0] * 0.5;
-		res.m_real.w = 0.0;
 
-		res.m_dual.x = moment.x * angle[0] * 0.5 + direction.x * pitch[0] * 0.5;
-		res.m_dual.y = moment.y * angle[0] * 0.5 + direction.y * pitch[0] * 0.5;
-		res.m_dual.z = moment.z * angle[0] * 0.5 + direction.z * pitch[0] * 0.5;
-		res.m_dual.w = 0.0;
+		double scale = 1 / Math.sqrt(m_real.dot(m_real));
+		scale *= scale;
+		res.m_real = m_real.clone().log();
+		res.m_dual = m_real.clone().conjugate().multiply(m_dual).multiply(scale);
 
 		return res;
 	}
@@ -285,7 +302,7 @@ public class DualQuaternion implements Cloneable
 
 		Vec3d d = new Vec3d(m_dual.x, m_dual.y, m_dual.z);
 		double half_pitch = d.dot(dir);
-		Vec3d mom = d.subtract(dir.clone().scale(half_pitch)).divide(half_angle);
+		Vec3d mom = d.subtract(dir.clone().multiply(half_pitch)).divide(half_angle);
 
 		return res.setFromScrew(half_angle * 2.0, half_pitch * 2.0, dir, mom);
 	}
@@ -326,6 +343,77 @@ public class DualQuaternion implements Cloneable
 	public QuaternionNew getDual()
 	{
 		return m_dual;
+	}
+
+
+	// https://xbdev.net/misc_demos/demos/dual_quaternions_beyond/paper.pdf
+	public DualQuaternion lerp(DualQuaternion from, DualQuaternion to, double t)
+	{
+		// Shortest path
+		double dot = from.m_real.dot(to.m_real);
+		if (dot < 0)
+		{
+			to = to.multiply(-1);
+		}
+
+		// ScLERP = qa(qa^-1 qb)^t
+		DualQuaternion diff = from.conjugate().multiply(to);
+		Vec3d vr = diff.m_real.getVectorPart();
+		Vec3d vd = diff.m_dual.getVectorPart();
+		double invr = 1 / Math.sqrt(vr.dot(vr));
+
+		// Screw parameters
+		double angle = 2 * Math.acos(diff.m_real.w);
+		double pitch = -2 * diff.m_dual.w * invr;
+		Vec3d direction = vr.clone().multiply(invr);
+		Vec3d moment = vd.subtract(direction.clone().multiply(pitch * diff.m_real.w * 0.5)).multiply(invr);
+
+		// Exponential power
+		angle *= t;
+		pitch *= t;
+
+		// Convert back to dual-quaternion
+		double sinAngle = Math.sin(0.5 * angle);
+		double cosAngle = Math.cos(0.5 * angle);
+		Vec3d d = direction.clone().multiply(sinAngle);
+		Vec3d e = moment.clone().multiply(sinAngle).add(direction.clone().multiply(pitch * 0.5 * cosAngle));
+		QuaternionNew real = new QuaternionNew(d.x, d.y, d.z, cosAngle);
+		QuaternionNew dual = new QuaternionNew(e.x, e.y, e.z, -pitch * 0.5 * sinAngle);
+
+		// Complete the multiplication and return the interpolated value
+		return from.multiply(new DualQuaternion(real, dual));
+	}
+
+
+	// https://xbdev.net/misc_demos/demos/dual_quaternions_beyond/paper.pdf
+	public Mat4d toMat4d()
+	{
+		DualQuaternion q = clone().normalize();
+
+		Mat4d m = new Mat4d().identity();
+		double w = q.m_real.w;
+		double x = q.m_real.x;
+		double y = q.m_real.y;
+		double z = q.m_real.z;
+
+		// Extract rotational information
+		m.m00 = w * w + x * x - y * y - z * z;
+		m.m01 = 2 * x * y + 2 * w * z;
+		m.m02 = 2 * x * z - 2 * w * y;
+		m.m10 = 2 * x * y - 2 * w * z;
+		m.m11 = w * w + y * y - x * x - z * z;
+		m.m12 = 2 * y * z + 2 * w * x;
+		m.m20 = 2 * x * z + 2 * w * y;
+		m.m21 = 2 * y * z - 2 * w * x;
+		m.m22 = w * w + z * z - x * x - y * y;
+
+		// Extract translation information
+		QuaternionNew t = q.m_dual.clone().multiply(q.m_real.clone().conjugate().multiply(2.0));
+		m.m30 = t.x;
+		m.m31 = t.y;
+		m.m32 = t.z;
+
+		return m;
 	}
 
 

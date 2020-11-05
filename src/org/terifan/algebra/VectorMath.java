@@ -11,9 +11,9 @@ public class VectorMath
 		Vec3d len = aEndPosition.clone().subtract(aStartPosition);
 		Vec3d firstPerp = new Vec3d(len.z, len.z, -(len.x + len.y)).normalize();
 		Vec3d secondPerp = firstPerp.clone().cross(len).normalize();
-		Vec3d direction = firstPerp.scale(Math.cos(angle)).add(secondPerp.scale(Math.sin(angle)));
+		Vec3d direction = firstPerp.multiply(Math.cos(angle)).add(secondPerp.multiply(Math.sin(angle)));
 
-		return aStartPosition.clone().interpolate(aEndPosition, aAxisAlpha).add(direction.scale(aRadius));
+		return aStartPosition.clone().interpolate(aEndPosition, aAxisAlpha).add(direction.multiply(aRadius));
 	}
 
 
@@ -68,7 +68,7 @@ public class VectorMath
 
 		if (sample.dot(aLightNormal) < 0)
 		{
-			sample.scale(-1);
+			sample.multiply(-1);
 		}
 
 		return sample.normalize();

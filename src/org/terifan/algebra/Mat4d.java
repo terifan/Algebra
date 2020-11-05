@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 
 /**
- * Column-major order matrix.
- *
+ * Column-major order matrix, properties are publicly available as: <code>m&lt;row&gt;&lt;column&gt;</code>.
+ * <p/>
  * The origin is stored in the matrix properties m30 (x location), m31 (y location) and m32 (z location).
  */
 public class Mat4d implements Cloneable, Serializable
@@ -15,10 +15,10 @@ public class Mat4d implements Cloneable, Serializable
 	private final static double DEGS_TO_RADS = Math.PI / 180.0;
 	private final static double DOUBLE_EQUALITY_TOLERANCE = 0.0000001;
 
-	public double m00, m01, m02, m03; // First  column - x-axis
-	public double m10, m11, m12, m13; // Second column - y-axis
-	public double m20, m21, m22, m23; // Third  column - z-axis
-	public double m30, m31, m32, m33; // Fourth column - origin
+	public double m00, m01, m02, m03; // First  row - x-axis
+	public double m10, m11, m12, m13; // Second row - y-axis
+	public double m20, m21, m22, m23; // Third  row - z-axis
+	public double m30, m31, m32, m33; // Fourth row - origin
 
 
 	public Mat4d()
@@ -500,6 +500,40 @@ public class Mat4d implements Cloneable, Serializable
 
 
 	/**
+	 * Initializes this matrix with identity and an origin.
+	 *
+	 * @return this matrix.
+	 */
+	public Mat4d makeOrigin(double x, double y, double z)
+	{
+		set(
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			x, y, z, 1
+		);
+		return this;
+	}
+
+
+	/**
+	 * Initializes this matrix with identity and an origin.
+	 *
+	 * @return this matrix.
+	 */
+	public Mat4d makeOrigin(Vec3d v)
+	{
+		set(
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			v.x, v.y, v.z, 1
+		);
+		return this;
+	}
+
+
+	/**
 	 * @return this matrix.
 	 */
 	public Mat4d makeScale(double x, double y, double z)
@@ -565,6 +599,17 @@ public class Mat4d implements Cloneable, Serializable
 	}
 
 
+	public Mat4d transposeYZ()
+	{
+		return set(
+			m02, m01, m00, m03,
+			m22, m21, m20, m23,
+			m12, m11, m10, m13,
+			m30, m31, m32, m33
+		);
+	}
+
+
 	/**
 	 * Multiplies this Mat4d by another Mat4d.
 	 *
@@ -612,6 +657,22 @@ public class Mat4d implements Cloneable, Serializable
 
 
 	/**
+	 * Transform the provided point in 3D space.
+	 *
+	 * @return the provided Vec3d.
+	 */
+	public Vec4d transformPoint(Vec4d v)
+	{
+		v.x = m00 * v.x + m10 * v.y + m20 * v.z + m30;
+		v.y = m01 * v.x + m11 * v.y + m21 * v.z + m31;
+		v.z = m02 * v.x + m12 * v.y + m22 * v.z + m32;
+		v.w = m03 * v.x + m13 * v.y + m23 * v.z + m33;
+
+		return v;
+	}
+
+
+	/**
 	 * Transform a direction in 3D space taking into account the orientation of this Mat4ds x/y/z axes.
 	 *
 	 * @return a new Vec3d with the transformed result.
@@ -628,8 +689,31 @@ public class Mat4d implements Cloneable, Serializable
 	}
 
 
+	public Mat4d scale(double aScale)
+	{
+		m00 *= aScale;
+		m01 *= aScale;
+		m02 *= aScale;
+		m03 *= aScale;
+		m10 *= aScale;
+		m11 *= aScale;
+		m12 *= aScale;
+		m13 *= aScale;
+		m20 *= aScale;
+		m21 *= aScale;
+		m22 *= aScale;
+		m23 *= aScale;
+		m30 *= aScale;
+		m31 *= aScale;
+		m32 *= aScale;
+		m33 *= aScale;
+
+		return this;
+	}
+
+
 	/**
-	 * Calculate and return the inverse of a Mat4d.
+	 * Invert this Mat4d.
 	 * <p>
 	 * Only matrices which do not have a {@link #determinant()} of zero can be inverted. If the determinant of the provided matrix is zero
 	 * then an IllegalArgumentException is thrown.
@@ -637,29 +721,29 @@ public class Mat4d implements Cloneable, Serializable
 	 * @param	m	The matrix to invert.
 	 * @return	The inverted matrix.
 	 */
-	public static Mat4d createInverse(Mat4d m)
+	public Mat4d invert()
 	{
-		Mat4d temp = new Mat4d();
+		Mat4d m = new Mat4d();
 
-		temp.m00 = m.m12 * m.m23 * m.m31 - m.m13 * m.m22 * m.m31 + m.m13 * m.m21 * m.m32 - m.m11 * m.m23 * m.m32 - m.m12 * m.m21 * m.m33 + m.m11 * m.m22 * m.m33;
-		temp.m01 = m.m03 * m.m22 * m.m31 - m.m02 * m.m23 * m.m31 - m.m03 * m.m21 * m.m32 + m.m01 * m.m23 * m.m32 + m.m02 * m.m21 * m.m33 - m.m01 * m.m22 * m.m33;
-		temp.m02 = m.m02 * m.m13 * m.m31 - m.m03 * m.m12 * m.m31 + m.m03 * m.m11 * m.m32 - m.m01 * m.m13 * m.m32 - m.m02 * m.m11 * m.m33 + m.m01 * m.m12 * m.m33;
-		temp.m03 = m.m03 * m.m12 * m.m21 - m.m02 * m.m13 * m.m21 - m.m03 * m.m11 * m.m22 + m.m01 * m.m13 * m.m22 + m.m02 * m.m11 * m.m23 - m.m01 * m.m12 * m.m23;
-		temp.m10 = m.m13 * m.m22 * m.m30 - m.m12 * m.m23 * m.m30 - m.m13 * m.m20 * m.m32 + m.m10 * m.m23 * m.m32 + m.m12 * m.m20 * m.m33 - m.m10 * m.m22 * m.m33;
-		temp.m11 = m.m02 * m.m23 * m.m30 - m.m03 * m.m22 * m.m30 + m.m03 * m.m20 * m.m32 - m.m00 * m.m23 * m.m32 - m.m02 * m.m20 * m.m33 + m.m00 * m.m22 * m.m33;
-		temp.m12 = m.m03 * m.m12 * m.m30 - m.m02 * m.m13 * m.m30 - m.m03 * m.m10 * m.m32 + m.m00 * m.m13 * m.m32 + m.m02 * m.m10 * m.m33 - m.m00 * m.m12 * m.m33;
-		temp.m13 = m.m02 * m.m13 * m.m20 - m.m03 * m.m12 * m.m20 + m.m03 * m.m10 * m.m22 - m.m00 * m.m13 * m.m22 - m.m02 * m.m10 * m.m23 + m.m00 * m.m12 * m.m23;
-		temp.m20 = m.m11 * m.m23 * m.m30 - m.m13 * m.m21 * m.m30 + m.m13 * m.m20 * m.m31 - m.m10 * m.m23 * m.m31 - m.m11 * m.m20 * m.m33 + m.m10 * m.m21 * m.m33;
-		temp.m21 = m.m03 * m.m21 * m.m30 - m.m01 * m.m23 * m.m30 - m.m03 * m.m20 * m.m31 + m.m00 * m.m23 * m.m31 + m.m01 * m.m20 * m.m33 - m.m00 * m.m21 * m.m33;
-		temp.m22 = m.m01 * m.m13 * m.m30 - m.m03 * m.m11 * m.m30 + m.m03 * m.m10 * m.m31 - m.m00 * m.m13 * m.m31 - m.m01 * m.m10 * m.m33 + m.m00 * m.m11 * m.m33;
-		temp.m23 = m.m03 * m.m11 * m.m20 - m.m01 * m.m13 * m.m20 - m.m03 * m.m10 * m.m21 + m.m00 * m.m13 * m.m21 + m.m01 * m.m10 * m.m23 - m.m00 * m.m11 * m.m23;
-		temp.m30 = m.m12 * m.m21 * m.m30 - m.m11 * m.m22 * m.m30 - m.m12 * m.m20 * m.m31 + m.m10 * m.m22 * m.m31 + m.m11 * m.m20 * m.m32 - m.m10 * m.m21 * m.m32;
-		temp.m31 = m.m01 * m.m22 * m.m30 - m.m02 * m.m21 * m.m30 + m.m02 * m.m20 * m.m31 - m.m00 * m.m22 * m.m31 - m.m01 * m.m20 * m.m32 + m.m00 * m.m21 * m.m32;
-		temp.m32 = m.m02 * m.m11 * m.m30 - m.m01 * m.m12 * m.m30 - m.m02 * m.m10 * m.m31 + m.m00 * m.m12 * m.m31 + m.m01 * m.m10 * m.m32 - m.m00 * m.m11 * m.m32;
-		temp.m33 = m.m01 * m.m12 * m.m20 - m.m02 * m.m11 * m.m20 + m.m02 * m.m10 * m.m21 - m.m00 * m.m12 * m.m21 - m.m01 * m.m10 * m.m22 + m.m00 * m.m11 * m.m22;
+		m.m00 = m12 * m23 * m31 - m13 * m22 * m31 + m13 * m21 * m32 - m11 * m23 * m32 - m12 * m21 * m33 + m11 * m22 * m33;
+		m.m01 = m03 * m22 * m31 - m02 * m23 * m31 - m03 * m21 * m32 + m01 * m23 * m32 + m02 * m21 * m33 - m01 * m22 * m33;
+		m.m02 = m02 * m13 * m31 - m03 * m12 * m31 + m03 * m11 * m32 - m01 * m13 * m32 - m02 * m11 * m33 + m01 * m12 * m33;
+		m.m03 = m03 * m12 * m21 - m02 * m13 * m21 - m03 * m11 * m22 + m01 * m13 * m22 + m02 * m11 * m23 - m01 * m12 * m23;
+		m.m10 = m13 * m22 * m30 - m12 * m23 * m30 - m13 * m20 * m32 + m10 * m23 * m32 + m12 * m20 * m33 - m10 * m22 * m33;
+		m.m11 = m02 * m23 * m30 - m03 * m22 * m30 + m03 * m20 * m32 - m00 * m23 * m32 - m02 * m20 * m33 + m00 * m22 * m33;
+		m.m12 = m03 * m12 * m30 - m02 * m13 * m30 - m03 * m10 * m32 + m00 * m13 * m32 + m02 * m10 * m33 - m00 * m12 * m33;
+		m.m13 = m02 * m13 * m20 - m03 * m12 * m20 + m03 * m10 * m22 - m00 * m13 * m22 - m02 * m10 * m23 + m00 * m12 * m23;
+		m.m20 = m11 * m23 * m30 - m13 * m21 * m30 + m13 * m20 * m31 - m10 * m23 * m31 - m11 * m20 * m33 + m10 * m21 * m33;
+		m.m21 = m03 * m21 * m30 - m01 * m23 * m30 - m03 * m20 * m31 + m00 * m23 * m31 + m01 * m20 * m33 - m00 * m21 * m33;
+		m.m22 = m01 * m13 * m30 - m03 * m11 * m30 + m03 * m10 * m31 - m00 * m13 * m31 - m01 * m10 * m33 + m00 * m11 * m33;
+		m.m23 = m03 * m11 * m20 - m01 * m13 * m20 - m03 * m10 * m21 + m00 * m13 * m21 + m01 * m10 * m23 - m00 * m11 * m23;
+		m.m30 = m12 * m21 * m30 - m11 * m22 * m30 - m12 * m20 * m31 + m10 * m22 * m31 + m11 * m20 * m32 - m10 * m21 * m32;
+		m.m31 = m01 * m22 * m30 - m02 * m21 * m30 + m02 * m20 * m31 - m00 * m22 * m31 - m01 * m20 * m32 + m00 * m21 * m32;
+		m.m32 = m02 * m11 * m30 - m01 * m12 * m30 - m02 * m10 * m31 + m00 * m12 * m31 + m01 * m10 * m32 - m00 * m11 * m32;
+		m.m33 = m01 * m12 * m20 - m02 * m11 * m20 + m02 * m10 * m21 - m00 * m12 * m21 - m01 * m10 * m22 + m00 * m11 * m22;
 
 		// Get the determinant of this matrix
-		double determinant = temp.determinant();
+		double determinant = m.determinant();
 
 		// Each property of the inverse matrix is multiplied by 1.0 divided by the determinant.
 		// As we cannot divide by zero, we will throw an IllegalArgumentException if the determinant is zero.
@@ -669,27 +753,11 @@ public class Mat4d implements Cloneable, Serializable
 		}
 
 		// Otherwise, calculate the value of one over the determinant and scale the matrix by that value
-		double oneOverDeterminant = 1.0 / temp.determinant();
+		m.scale(1.0 / determinant);
 
-		temp.m00 *= oneOverDeterminant;
-		temp.m01 *= oneOverDeterminant;
-		temp.m02 *= oneOverDeterminant;
-		temp.m03 *= oneOverDeterminant;
-		temp.m10 *= oneOverDeterminant;
-		temp.m11 *= oneOverDeterminant;
-		temp.m12 *= oneOverDeterminant;
-		temp.m13 *= oneOverDeterminant;
-		temp.m20 *= oneOverDeterminant;
-		temp.m21 *= oneOverDeterminant;
-		temp.m22 *= oneOverDeterminant;
-		temp.m23 *= oneOverDeterminant;
-		temp.m30 *= oneOverDeterminant;
-		temp.m31 *= oneOverDeterminant;
-		temp.m32 *= oneOverDeterminant;
-		temp.m33 *= oneOverDeterminant;
+		set(m);
 
-		// Finally, return the inverted matrix
-		return temp;
+		return this;
 	}
 
 

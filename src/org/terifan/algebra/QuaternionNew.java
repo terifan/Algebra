@@ -47,49 +47,49 @@ public class QuaternionNew
 
 
 	// https://github.com/xamarin/Urho3D/blob/master/Source/Urho3D/Math/Quaternion.cpp
-	public static QuaternionNew createFromRotationMatrix(Mat3d matrix)
+	public static QuaternionNew createFromRotationMatrix(Mat3d aMatrix)
 	{
 		QuaternionNew q = new QuaternionNew();
 
-		double t = matrix.m00 + matrix.m11 + matrix.m22;
+		double t = aMatrix.m00 + aMatrix.m11 + aMatrix.m22;
 
 		if (t > 0.0)
 		{
 			double invS = 0.5 / Math.sqrt(1.0 + t);
 
-			q.x = (matrix.m21 - matrix.m12) * invS;
-			q.y = (matrix.m02 - matrix.m20) * invS;
-			q.z = (matrix.m10 - matrix.m01) * invS;
+			q.x = (aMatrix.m12 - aMatrix.m21) * invS;
+			q.y = (aMatrix.m20 - aMatrix.m02) * invS;
+			q.z = (aMatrix.m01 - aMatrix.m10) * invS;
 			q.w = 0.25 / invS;
 		}
 		else
 		{
-			if (matrix.m00 > matrix.m11 && matrix.m00 > matrix.m22)
+			if (aMatrix.m00 > aMatrix.m11 && aMatrix.m00 > aMatrix.m22)
 			{
-				double invS = 0.5 / Math.sqrt(1.0 + matrix.m00 - matrix.m11 - matrix.m22);
+				double invS = 0.5 / Math.sqrt(1.0 + aMatrix.m00 - aMatrix.m11 - aMatrix.m22);
 
 				q.x = 0.25 / invS;
-				q.y = (matrix.m01 + matrix.m10) * invS;
-				q.z = (matrix.m20 + matrix.m02) * invS;
-				q.w = (matrix.m21 - matrix.m12) * invS;
+				q.y = (aMatrix.m10 + aMatrix.m01) * invS;
+				q.z = (aMatrix.m02 + aMatrix.m20) * invS;
+				q.w = (aMatrix.m12 - aMatrix.m21) * invS;
 			}
-			else if (matrix.m11 > matrix.m22)
+			else if (aMatrix.m11 > aMatrix.m22)
 			{
-				double invS = 0.5f / Math.sqrt(1.0f + matrix.m11 - matrix.m00 - matrix.m22);
+				double invS = 0.5 / Math.sqrt(1.0 + aMatrix.m11 - aMatrix.m00 - aMatrix.m22);
 
-				q.x = (matrix.m01 + matrix.m10) * invS;
+				q.x = (aMatrix.m10 + aMatrix.m01) * invS;
 				q.y = 0.25 / invS;
-				q.z = (matrix.m12 + matrix.m21) * invS;
-				q.w = (matrix.m02 - matrix.m20) * invS;
+				q.z = (aMatrix.m21 + aMatrix.m12) * invS;
+				q.w = (aMatrix.m20 - aMatrix.m02) * invS;
 			}
 			else
 			{
-				double invS = 0.5f / Math.sqrt(1.0f + matrix.m22 - matrix.m00 - matrix.m11);
+				double invS = 0.5 / Math.sqrt(1.0 + aMatrix.m22 - aMatrix.m00 - aMatrix.m11);
 
-				q.x = (matrix.m02 + matrix.m20) * invS;
-				q.y = (matrix.m12 + matrix.m21) * invS;
+				q.x = (aMatrix.m20 + aMatrix.m02) * invS;
+				q.y = (aMatrix.m21 + aMatrix.m12) * invS;
 				q.z = 0.25 / invS;
-				q.w = (matrix.m10 - matrix.m01) * invS;
+				q.w = (aMatrix.m01 - aMatrix.m10) * invS;
 			}
 		}
 
@@ -164,6 +164,17 @@ public class QuaternionNew
 	}
 
 
+	public QuaternionNew subtract(QuaternionNew q)
+	{
+		w -= q.w;
+		x -= q.x;
+		y -= q.y;
+		z -= q.z;
+
+		return this;
+	}
+
+
 	public QuaternionNew div(double aScalar)
 	{
 		w /= aScalar;
@@ -230,6 +241,23 @@ public class QuaternionNew
 		z = 0;
 		w = 1;
 		return this;
+	}
+
+
+	public QuaternionNew log()
+	{
+		double exp_w = Math.sqrt(dot(this));
+		double w = Math.log(exp_w);
+		double a = Math.acos(w / exp_w);
+
+		if (Math.abs(a) < 0.00001)
+		{
+			return new QuaternionNew(0, 0, 0, w);
+		}
+
+		double mag = 1 / exp_w / Math.sin(a); // sinc???
+
+		return new QuaternionNew(x * mag, y * mag, z * mag, w);
 	}
 
 
@@ -303,7 +331,7 @@ public class QuaternionNew
 
 	public Vec3d rotate(Vec3d v)
 	{
-		return v.add(new Vec3d(x, y, z).scale(2).cross(new Vec3d(x, y, z).cross(v).add(v.clone().scale(w))));
+		return v.add(new Vec3d(x, y, z).multiply(2).cross(new Vec3d(x, y, z).cross(v).add(v.clone().multiply(w))));
 	}
 
 

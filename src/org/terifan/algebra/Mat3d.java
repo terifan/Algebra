@@ -3,6 +3,9 @@ package org.terifan.algebra;
 import java.io.Serializable;
 
 
+/**
+ * Column-major order matrix.
+ */
 public class Mat3d implements Cloneable, Serializable
 {
 	private final static long serialVersionUID = 1L;
