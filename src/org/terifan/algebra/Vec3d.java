@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.Locale;
 import org.terifan.bundle.Array;
 import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.BundleInput;
+import org.terifan.bundle.BundleOutput;
 
 
 /**
  * Vector class represents a point in space defined by x, y and z coordinates.
  */
-public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
+public class Vec3d implements Cloneable, Serializable, Bundlable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -868,20 +870,19 @@ public class Vec3d implements Cloneable, Serializable, Bundlable<Array>
 
 
 	@Override
-	public void readExternal(Array aArray)
+	public void readExternal(BundleInput aIn)
 	{
-		x = aArray.getDouble(0);
-		y = aArray.getDouble(1);
-		z = aArray.getDouble(2);
+		Array in = aIn.array();
+		x = in.getDouble(0);
+		y = in.getDouble(1);
+		z = in.getDouble(2);
 	}
 
 
 	@Override
-	public void writeExternal(Array aArray)
+	public void writeExternal(BundleOutput aOut)
 	{
-		aArray.put(0, x);
-		aArray.put(1, y);
-		aArray.put(2, z);
+		aOut.array(x,y,z);
 	}
 
 
