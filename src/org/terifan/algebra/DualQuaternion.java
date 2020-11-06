@@ -40,7 +40,7 @@ public class DualQuaternion implements Cloneable
 
 
 	/**
-	 * Note: this DualQuaternion must be normalized before calling this
+	 * Note: this DualQuaternion must be normalized before calling this method
 	 */
 	public Vec3d transform(Vec3d p)
 	{
