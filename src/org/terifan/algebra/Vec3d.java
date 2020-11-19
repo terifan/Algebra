@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Locale;
 import org.terifan.bundle.Array;
 import org.terifan.bundle.Bundlable;
-import org.terifan.bundle.BundleInput;
-import org.terifan.bundle.BundleOutput;
+import org.terifan.bundle.BundlableInput;
+import org.terifan.bundle.BundlableOutput;
 
 
 /**
@@ -870,7 +870,7 @@ public class Vec3d implements Cloneable, Serializable, Bundlable
 
 
 	@Override
-	public void readExternal(BundleInput aIn)
+	public void readExternal(BundlableInput aIn)
 	{
 		Array in = aIn.array();
 		x = in.getDouble(0);
@@ -880,7 +880,7 @@ public class Vec3d implements Cloneable, Serializable, Bundlable
 
 
 	@Override
-	public void writeExternal(BundleOutput aOut)
+	public void writeExternal(BundlableOutput aOut)
 	{
 		aOut.array(x,y,z);
 	}
