@@ -870,9 +870,9 @@ public class Vec3d implements Cloneable, Serializable, Bundlable
 
 
 	@Override
-	public void readExternal(BundlableInput aIn)
+	public void readExternal(BundlableInput aInput)
 	{
-		Array in = aIn.array();
+		Array in = aInput.array();
 		x = in.getDouble(0);
 		y = in.getDouble(1);
 		z = in.getDouble(2);
@@ -880,9 +880,9 @@ public class Vec3d implements Cloneable, Serializable, Bundlable
 
 
 	@Override
-	public void writeExternal(BundlableOutput aOut)
+	public void writeExternal(BundlableOutput aOutput)
 	{
-		aOut.array(x,y,z);
+		aOutput.array(x,y,z);
 	}
 
 

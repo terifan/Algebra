@@ -471,6 +471,12 @@ public class Mat4d implements Cloneable, Serializable
 	}
 
 
+	public Vec3d getOrigin(Vec3d aOutput)
+	{
+		return aOutput.set(m30, m31, m32);
+	}
+
+
 	/**
 	 * Set the origin of this Mat4d.
 	 *
@@ -638,6 +644,12 @@ public class Mat4d implements Cloneable, Serializable
 			m02 * m.m30 + m12 * m.m31 + m22 * m.m32 + m32 * m.m33,
 			m03 * m.m30 + m13 * m.m31 + m23 * m.m32 + m33 * m.m33
 		);
+	}
+
+
+	public Mat4d multiply(Vec3d m)
+	{
+		return multiply(new Mat4d().makeOrigin(m));
 	}
 
 
