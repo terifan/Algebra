@@ -1,12 +1,16 @@
 package org.terifan.algebra;
 
 import java.io.Serializable;
+import org.terifan.bundle.Array;
+import org.terifan.bundle.Bundlable;
+import org.terifan.bundle.BundlableInput;
+import org.terifan.bundle.BundlableOutput;
 
 
 /**
  * Column-major order matrix.
  */
-public class Mat3d implements Cloneable, Serializable
+public class Mat3d implements Cloneable, Serializable, Bundlable
 {
 	private final static long serialVersionUID = 1L;
 
@@ -410,6 +414,29 @@ public class Mat3d implements Cloneable, Serializable
 		Mat3d m = new Mat3d();
 		m.set(this);
 		return m;
+	}
+
+
+	@Override
+	public void readExternal(BundlableInput aInput)
+	{
+		Array in = aInput.array();
+		m00 = in.getDouble(0);
+		m01 = in.getDouble(1);
+		m02 = in.getDouble(2);
+		m10 = in.getDouble(3);
+		m11 = in.getDouble(4);
+		m12 = in.getDouble(5);
+		m20 = in.getDouble(6);
+		m21 = in.getDouble(7);
+		m22 = in.getDouble(8);
+	}
+
+
+	@Override
+	public void writeExternal(BundlableOutput aOutput)
+	{
+		aOutput.array(m00,m01,m02,m10,m11,m12,m20,m21,m22);
 	}
 
 
