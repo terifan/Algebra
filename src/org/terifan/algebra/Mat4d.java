@@ -30,26 +30,26 @@ public class Mat4d implements Cloneable, Serializable, Bundlable
 	}
 
 
-	public Mat4d(Mat3d rotationMatrix, Vec3d origin)
+	public Mat4d(Mat3d aRotation, Vec3d aOrigin)
 	{
-		m00 = rotationMatrix.m00;
-		m01 = rotationMatrix.m01;
-		m02 = rotationMatrix.m02;
+		m00 = aRotation.m00;
+		m01 = aRotation.m01;
+		m02 = aRotation.m02;
 		m03 = 0.0;
 
-		m10 = rotationMatrix.m10;
-		m11 = rotationMatrix.m11;
-		m12 = rotationMatrix.m12;
+		m10 = aRotation.m10;
+		m11 = aRotation.m11;
+		m12 = aRotation.m12;
 		m13 = 0.0;
 
-		m20 = rotationMatrix.m20;
-		m21 = rotationMatrix.m21;
-		m22 = rotationMatrix.m22;
+		m20 = aRotation.m20;
+		m21 = aRotation.m21;
+		m22 = aRotation.m22;
 		m23 = 0.0;
 
-		m30 = origin.x;
-		m31 = origin.y;
-		m32 = origin.z;
+		m30 = aOrigin.x;
+		m31 = aOrigin.y;
+		m32 = aOrigin.z;
 		m33 = 1.0;
 	}
 
@@ -1278,9 +1278,7 @@ public class Mat4d implements Cloneable, Serializable, Bundlable
 	@Override
 	public Mat4d clone()
 	{
-		Mat4d m = new Mat4d();
-		m.set(this);
-		return m;
+		return new Mat4d().set(this);
 	}
 
 

@@ -712,4 +712,10 @@ public class Mat3d implements Cloneable, Serializable, Bundlable
 //		}
 //		return "{" + s + "}";
 //	}
+
+
+	public Mat4d toMat4d()
+	{
+		return new Mat4d(this, Vec3d.ZERO);
+	}
 }
