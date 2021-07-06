@@ -1318,6 +1318,31 @@ public class Mat4d implements Cloneable, Serializable, Bundlable
 	}
 
 
+	/**
+	 *
+	 * @return
+	 *   Vec3d containing Yaw,Pitch,Roll
+	 */
+	public Vec3d toEuler()
+	{
+		Vec3d euler = new Vec3d();
+		euler.x = Math.asin(-m32); // Pitch
+
+		if (Math.cos(euler.x) > 0.0001) // Not at poles
+		{
+			euler.y = Math.atan2(m31, m33); // Yaw
+			euler.z = Math.atan2(m12, m22); // Roll
+		}
+		else
+		{
+			euler.y = 0.0; // Yaw
+			euler.z = Math.atan2(-m21, m11); // Roll
+		}
+
+		return euler;
+	}
+
+
 	@Override
 	public void readExternal(BundlableInput aInput)
 	{
